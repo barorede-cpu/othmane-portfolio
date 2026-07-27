@@ -21,14 +21,63 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  var hasGsap = !!(window.gsap && window.ScrollTrigger);
+  if(hasGsap){ gsap.registerPlugin(ScrollTrigger); }
+
+  /* smooth scroll (Lenis), wired into GSAP's ticker + ScrollTrigger */
+  var lenis = null;
+  if(!reduce && window.Lenis){
+    lenis = new Lenis({
+      duration: 1.1,
+      easing: function(t){ return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); },
+      smoothWheel: true
+    });
+    if(hasGsap){
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function raf(time){ lenis.raf(time); requestAnimationFrame(raf); });
+    }
+  }
+
   /* scroll reveal */
-  if(!reduce && 'IntersectionObserver' in window){
+  if(!reduce && hasGsap){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      gsap.to(el, {
+        opacity:1, y:0, duration:0.9, ease:'power3.out',
+        scrollTrigger:{ trigger: el, start:'top 88%', once:true }
+      });
+    });
+    document.querySelectorAll('.mask-reveal').forEach(function(el){
+      if(el.id === 'mr1' || el.id === 'mr2') return; /* handled by preloader */
+      gsap.to(el.querySelectorAll('.word span'), {
+        y:0, duration:0.9, ease:'power3.out', stagger:0.06,
+        scrollTrigger:{ trigger: el, start:'top 88%', once:true }
+      });
+    });
+    gsap.set('.tk-group .chip', {opacity:0, y:10});
+    document.querySelectorAll('.tk-group').forEach(function(group){
+      gsap.to(group.querySelectorAll('.chip'), {
+        opacity:1, y:0, duration:0.55, ease:'power2.out', stagger:0.045,
+        scrollTrigger:{ trigger: group, start:'top 92%', once:true }
+      });
+    });
+    var slimList = document.querySelector('.slim-list');
+    if(slimList){
+      gsap.set(slimList.children, {opacity:0, y:14});
+      gsap.to(slimList.children, {
+        opacity:1, y:0, duration:0.6, ease:'power2.out', stagger:0.1,
+        scrollTrigger:{ trigger: slimList, start:'top 88%', once:true }
+      });
+    }
+  } else if(!reduce && 'IntersectionObserver' in window){
     var obs = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
       });
     }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
-    document.querySelectorAll('.reveal, #mrFeat').forEach(function(el){ obs.observe(el); });
+    document.querySelectorAll('.reveal, .mask-reveal').forEach(function(el){ obs.observe(el); });
   } else {
     document.querySelectorAll('.reveal, .mask-reveal').forEach(function(el){ el.classList.add('is-visible'); });
   }
@@ -154,4 +203,99 @@
       }
     }, {passive:true});
   }
+
+  /* pinned capability stack — GSAP ScrollTrigger, desktop only, safe no-op fallback */
+  if(hasGsap && !reduce){
+    ScrollTrigger.matchMedia({
+      "(min-width: 861px)": function(){
+        var pin = document.getElementById('stackPin');
+        if(!pin) return;
+        var cards = gsap.utils.toArray('.stack-card', pin);
+        if(cards.length < 2) return;
+        pin.classList.add('stack-ready');
+        cards.forEach(function(card, i){
+          if(i === 0) return;
+          gsap.set(card, {yPercent:28, scale:0.94, opacity:0.001});
+        });
+        var tl = gsap.timeline({
+          scrollTrigger:{
+            trigger: pin, start:'top top',
+            end:'+=' + (window.innerHeight * (cards.length - 1) * 0.9),
+            pin:true, scrub:0.5, pinSpacing:true
+          }
+        });
+        cards.forEach(function(card, i){
+          if(i === 0) return;
+          tl.to(card, {yPercent:0, scale:1, opacity:1, ease:'none', duration:1}, i - 1);
+        });
+        return function(){
+          pin.classList.remove('stack-ready');
+          gsap.set(cards, {clearProps:'all'});
+        };
+      }
+    });
+  }
+
+  /* "hold to blast" — a small delight on the availability pill */
+  (function(){
+    var pill = document.getElementById('statusPill');
+    var fx = document.getElementById('fx');
+    if(!pill || !fx) return;
+    var fctx = fx.getContext('2d');
+    function sizeFx(){ fx.width = window.innerWidth; fx.height = window.innerHeight; }
+    sizeFx();
+    window.addEventListener('resize', sizeFx);
+
+    var particles = [];
+    var palette = ['#e6ff4d', '#101114', '#c7db3f'];
+    function blastAt(x, y){
+      for(var i=0;i<28;i++){
+        var angle = (Math.PI*2) * (i/28) + Math.random()*0.4;
+        var speed = 2.5 + Math.random()*4;
+        particles.push({
+          x:x, y:y,
+          vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+          size:2 + Math.random()*3,
+          color:palette[i % palette.length],
+          life:1
+        });
+      }
+      if(!raf){ raf = requestAnimationFrame(tick); }
+    }
+    var raf = null;
+    function tick(){
+      fctx.clearRect(0,0,fx.width,fx.height);
+      particles.forEach(function(p){
+        p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life -= 0.018;
+        fctx.globalAlpha = Math.max(p.life,0);
+        fctx.fillStyle = p.color;
+        fctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+      particles = particles.filter(function(p){ return p.life > 0; });
+      fctx.globalAlpha = 1;
+      if(particles.length){ raf = requestAnimationFrame(tick); } else { raf = null; }
+    }
+
+    var holdTimer = null, holdStart = 0;
+    var HOLD_MS = 550;
+    function startHold(){
+      if(reduce){ triggerBlast(); return; }
+      pill.classList.add('charging');
+      holdStart = Date.now();
+      holdTimer = setTimeout(triggerBlast, HOLD_MS);
+    }
+    function cancelHold(){
+      pill.classList.remove('charging');
+      clearTimeout(holdTimer);
+    }
+    function triggerBlast(){
+      pill.classList.remove('charging');
+      var r = pill.getBoundingClientRect();
+      blastAt(r.left + r.width/2, r.top + r.height/2);
+    }
+    pill.addEventListener('pointerdown', startHold);
+    pill.addEventListener('pointerup', cancelHold);
+    pill.addEventListener('pointerleave', cancelHold);
+    pill.addEventListener('click', function(e){ e.preventDefault(); });
+  })();
 })();
