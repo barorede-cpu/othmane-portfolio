@@ -46,6 +46,7 @@
     document.querySelectorAll('.reveal').forEach(function(el){
       gsap.to(el, {
         opacity:1, y:0, duration:0.9, ease:'power3.out',
+        onComplete:function(){ gsap.set(el, {clearProps:'transform'}); },
         scrollTrigger:{ trigger: el, start:'top 88%', once:true }
       });
     });
