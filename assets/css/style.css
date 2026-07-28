@@ -175,7 +175,7 @@
   .status-pill:hover{color:var(--ink);}
 
   /* pinned capability stack — desktop enhancement, only wired up once GSAP confirms it's running */
-  #stackPin.stack-ready{position:relative;height:74vh;min-height:520px;display:block;}
+  #stackPin.stack-ready{position:relative;height:74vh;min-height:520px;display:block;overflow:hidden;}
   #stackPin.stack-ready .stack-card{position:absolute;inset:0;margin:0;}
   @media (max-width:860px){
     #stackPin.stack-ready{height:auto;}

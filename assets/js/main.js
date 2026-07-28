@@ -216,7 +216,7 @@
         pin.classList.add('stack-ready');
         cards.forEach(function(card, i){
           if(i === 0) return;
-          gsap.set(card, {yPercent:28, scale:0.94, opacity:0.001});
+          gsap.set(card, {yPercent:100});
         });
         var tl = gsap.timeline({
           scrollTrigger:{
@@ -227,7 +227,7 @@
         });
         cards.forEach(function(card, i){
           if(i === 0) return;
-          tl.to(card, {yPercent:0, scale:1, opacity:1, ease:'none', duration:1}, i - 1);
+          tl.to(card, {yPercent:0, ease:'none', duration:1}, i - 1);
         });
         return function(){
           pin.classList.remove('stack-ready');
