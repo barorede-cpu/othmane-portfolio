@@ -1,26 +1,22 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Othmane Baroud — Sites web, e-commerce COD &amp; présence digitale</title>
-<meta name="description" content="Othmane Baroud — Création de sites web tous secteurs, e-commerce en paiement à la livraison (COD) et gestion de présence digitale : SEO, moteurs de recherche et réseaux sociaux. Casablanca, Maroc." />
-<script>
-  (function(){
-    var d = document.documentElement;
-    d.classList.add('js');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    d.classList.add(reduce ? 'no-intro' : 'intro-running');
-  })();
-</script>
+<title>Othmane Baroud — Digital systems that turn traffic into customers</title>
+<meta name="description" content="I build websites, e-commerce and conversion systems for businesses ready to grow. $20K+ ad spend managed, 21M+ impressions, 400+ orders. Casablanca, Morocco — available worldwide." />
+<meta property="og:title" content="Othmane Baroud — Digital systems that turn traffic into customers" />
+<meta property="og:description" content="Websites, e-commerce, conversion systems and automation for businesses ready to grow." />
+<meta property="og:type" content="website" />
+<script>document.documentElement.classList.add('js');</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000000'/%3E%3Ctext x='32' y='45' font-family='Helvetica,Arial,sans-serif' font-size='32' font-weight='700' fill='%23c8a96a' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" />
 <meta name="theme-color" content="#000000" />
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 <div id="scroll-progress" aria-hidden="true"></div>
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Capture agrandie" hidden>
-  <button class="lb-close" id="lbClose" type="button" aria-label="Fermer">&times;</button>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged screenshot" hidden>
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close">&times;</button>
   <img id="lbImg" src="" alt="" />
 </div>
 <canvas id="grain" aria-hidden="true"></canvas>
@@ -28,493 +24,413 @@
 <div id="cursor-ring" aria-hidden="true"><span id="cursor-label"></span></div>
 <div id="cursor-dot" aria-hidden="true"></div>
 
-<div class="intro is-wait" id="intro" aria-hidden="true">
-  <div class="intro__glow"></div>
-  <div class="intro__frame"><i class="itk tl"></i><i class="itk tr"></i><i class="itk bl"></i><i class="itk br"></i></div>
-  <div class="intro__center">
-    <p class="intro__eyebrow">CASABLANCA &mdash; MAROC</p>
-    <p class="shutter shutter--auto intro__mark" aria-label="Othmane Baroud">
-      <span aria-hidden="true">
-        <span class="shutter__line"><span class="shutter__word"><span class="shutter__char" data-c="O" style="--i:0"><span class="shutter__base" data-c="O">O</span></span><span class="shutter__char" data-c="T" style="--i:1"><span class="shutter__base" data-c="T">T</span></span><span class="shutter__char" data-c="H" style="--i:2"><span class="shutter__base" data-c="H">H</span></span><span class="shutter__char" data-c="M" style="--i:3"><span class="shutter__base" data-c="M">M</span></span><span class="shutter__char" data-c="A" style="--i:4"><span class="shutter__base" data-c="A">A</span></span><span class="shutter__char" data-c="N" style="--i:5"><span class="shutter__base" data-c="N">N</span></span><span class="shutter__char" data-c="E" style="--i:6"><span class="shutter__base" data-c="E">E</span></span></span></span>
-        <span class="shutter__line"><span class="shutter__word"><span class="shutter__char" data-c="B" style="--i:7"><span class="shutter__base" data-c="B">B</span></span><span class="shutter__char" data-c="A" style="--i:8"><span class="shutter__base" data-c="A">A</span></span><span class="shutter__char" data-c="R" style="--i:9"><span class="shutter__base" data-c="R">R</span></span><span class="shutter__char" data-c="O" style="--i:10"><span class="shutter__base" data-c="O">O</span></span><span class="shutter__char" data-c="U" style="--i:11"><span class="shutter__base" data-c="U">U</span></span><span class="shutter__char" data-c="D" style="--i:12"><span class="shutter__base" data-c="D">D</span></span></span></span>
-      </span>
-    </p>
-    <span class="intro__rule"></span>
-    <p class="intro__role">
-      <span>Sites&nbsp;Web</span><i>&middot;</i><span>E&#8209;commerce&nbsp;COD</span><i>&middot;</i><span>SEO&nbsp;&amp;&nbsp;Social&nbsp;Media</span>
-    </p>
-  </div>
-</div>
-<script>
-  /* Intro controller — self-contained so the page can never stay locked
-     behind the overlay if main.js fails to load. */
-  (function(){
-    var root = document.documentElement;
-    var el = document.getElementById('intro');
-    var finished = false;
-
-    function done(){
-      if(finished) return;
-      finished = true;
-      root.classList.remove('intro-running');
-      root.classList.add('intro-done');
-      document.dispatchEvent(new CustomEvent('intro:done'));
-    }
-
-    if(!el || !root.classList.contains('intro-running')){ done(); return; }
-
-    /* Hold the keyframes until the display font is ready, otherwise the
-       shutter sweeps across glyphs that have not been painted yet. */
-    var started = false;
-    function start(){ if(started) return; started = true; el.classList.remove('is-wait'); }
-    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(start); }
-    setTimeout(start, 700);
-
-    el.addEventListener('animationend', function(e){
-      if(e.animationName === 'introOut' || e.animationName === 'introSkip') done();
-    });
-    setTimeout(done, 8000);
-
-    function skip(){
-      if(finished) return;
-      el.classList.remove('is-wait');
-      el.classList.add('is-skip');
-      done();
-    }
-    el.addEventListener('click', skip);
-    window.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') skip();
-    });
-  })();
-</script>
-
 <header class="nav">
   <div class="wrap nav-row">
-    <a href="#top" class="brand">OB<small>OTHMANE&nbsp;BAROUD<br>WEB&nbsp;·&nbsp;E-COMMERCE&nbsp;·&nbsp;SEO</small></a>
+    <a href="#top" class="brand">OB<small>OTHMANE&nbsp;BAROUD</small></a>
     <nav class="nav-links">
-      <a href="#offre"><span class="t-fr">Offre</span><span class="t-en">Services</span></a>
-      <a href="#profil"><span class="t-fr">Profil</span><span class="t-en">Profile</span></a>
-      <a href="#travaux"><span class="t-fr">Travaux</span><span class="t-en">Work</span></a>
-      <a href="#preuves"><span class="t-fr">Preuves</span><span class="t-en">Proof</span></a>
-      <a href="#contact">Contact</a>
+      <a href="#work"><span class="t-en">Work</span><span class="t-fr">Réalisations</span></a>
+      <a href="#services"><span class="t-en">Services</span><span class="t-fr">Services</span></a>
+      <a href="#about"><span class="t-en">About</span><span class="t-fr">À propos</span></a>
+      <a href="#contact"><span class="t-en">Contact</span><span class="t-fr">Contact</span></a>
     </nav>
     <div class="nav-right">
-      <button class="status-pill" id="statusPill" type="button"><span class="status-dot"></span><span class="t-fr">Disponible en freelance</span><span class="t-en">Available for freelance</span></button>
-      <button class="snd-toggle" id="sndToggle" type="button" aria-pressed="false" aria-label="Activer le son"><span></span><span></span><span></span><span></span></button>
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
+      <a class="btn btn-sm js-book" href="#contact"><span class="t-en">Book a Call</span><span class="t-fr">Réserver un appel</span></a>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">FR</button>
     </div>
   </div>
 </header>
 
 <main id="top">
+
+  <!-- ============================== HERO ============================== -->
   <section class="hero">
     <canvas id="blackhole" aria-hidden="true"></canvas>
     <div class="wrap hero-inner">
-      <div class="eyebrow"><span class="t-fr">SITES WEB — E-COMMERCE COD — PRÉSENCE DIGITALE</span><span class="t-en">WEB — COD E-COMMERCE — DIGITAL PRESENCE</span></div>
+      <div class="eyebrow"><span class="t-en">DIGITAL SYSTEMS FOR GROWING BUSINESSES</span><span class="t-fr">SYSTÈMES DIGITAUX POUR ENTREPRISES EN CROISSANCE</span></div>
       <h1 class="hero-h1">
-        <span class="mask-reveal" id="mr1"><span class="word" style="--i:0"><span>OTHMANE</span></span></span>
-        <span class="mask-reveal" id="mr2"><span class="word" style="--i:1"><span>BAROUD</span></span></span>
+        <span class="mask-reveal" id="mr1"><span class="word" style="--i:0"><span class="ln"><span class="t-en">I Build Digital Systems</span><span class="t-fr">Je construis des systèmes</span></span></span></span>
+        <span class="mask-reveal" id="mr2"><span class="word" style="--i:1"><span class="ln"><span class="t-en">That Turn Traffic Into Customers.</span><span class="t-fr">qui transforment le trafic en clients.</span></span></span></span>
       </h1>
       <p class="hero-thesis">
-        <span class="t-fr">Je conçois des sites web pour tous les secteurs, je monte des boutiques e-commerce en paiement à la livraison, et je pilote votre présence en ligne — SEO, moteurs de recherche et réseaux sociaux.</span>
-        <span class="t-en">I build websites for every sector, set up cash-on-delivery e-commerce stores, and run your online presence — SEO, search engines and social media.</span>
-      </p>
-      <p class="hero-meta">
-        <span class="t-fr">Casablanca, Maroc — Fondateur de 212 Denim, la marque sur laquelle je teste tout ce que je livre.</span>
-        <span class="t-en">Casablanca, Morocco — Founder of 212 Denim, the brand where I road-test everything I ship.</span>
+        <span class="t-en">Websites, e-commerce, conversion systems and automation for businesses ready to grow.</span>
+        <span class="t-fr">Sites web, e-commerce, systèmes de conversion et automatisation pour les entreprises prêtes à grandir.</span>
       </p>
       <div class="hero-cta">
-        <a class="btn magnetic" href="mailto:barorede@gmail.com"><span class="t-fr">Écrire un email</span><span class="t-en">Send an email</span></a>
-        <a class="link-arrow magnetic" href="https://212denim.com" target="_blank" rel="noopener">212denim.com ↗</a>
+        <a class="btn magnetic js-book" href="#contact"><span class="t-en">Book a Strategy Call →</span><span class="t-fr">Réserver un appel stratégique →</span></a>
+        <a class="link-arrow magnetic" href="#work"><span class="t-en">View My Work</span><span class="t-fr">Voir mes réalisations</span></a>
       </div>
+      <ul class="hero-stats">
+        <li><b data-count="20" data-prefix="$" data-suffix="K+">$20K+</b><span class="t-en">Ad spend managed</span><span class="t-fr">Budget publicitaire piloté</span></li>
+        <li><b data-count="21" data-suffix="M+">21M+</b><span class="t-en">Impressions delivered</span><span class="t-fr">Impressions diffusées</span></li>
+        <li><b data-count="400" data-suffix="+">400+</b><span class="t-en">Orders processed</span><span class="t-fr">Commandes traitées</span></li>
+        <li><b data-count="95" data-suffix="+">95+</b><span class="t-en">Campaigns run</span><span class="t-fr">Campagnes menées</span></li>
+      </ul>
     </div>
     <div class="scroll-cue" aria-hidden="true">
       <span class="sc-line"></span>
-      <span class="sc-label"><span class="t-fr">DÉFILER</span><span class="t-en">SCROLL</span></span>
+      <span class="sc-label"><span class="t-en">SCROLL</span><span class="t-fr">DÉFILER</span></span>
     </div>
   </section>
 
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <div class="marquee-seg"><span>SITES WEB</span><span class="dot">·</span><span>CASH ON DELIVERY</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>SEO</span><span class="dot">·</span><span>SOCIAL MEDIA</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
-      <div class="marquee-seg"><span>SITES WEB</span><span class="dot">·</span><span>CASH ON DELIVERY</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>SEO</span><span class="dot">·</span><span>SOCIAL MEDIA</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
-    </div>
-  </div>
-
-  <section class="facts" style="padding:0;">
+  <!-- ============================== TRUST ============================= -->
+  <section class="trust">
     <div class="wrap">
-      <div class="facts-grid">
-        <div class="fact"><div class="fact-value">03+</div><div class="fact-label"><span class="t-fr">Ans d'expérience digitale</span><span class="t-en">Years of digital experience</span></div></div>
-        <div class="fact"><div class="fact-value">21M+</div><div class="fact-label"><span class="t-fr">Impressions publicitaires générées</span><span class="t-en">Ad impressions delivered</span></div></div>
-        <div class="fact"><div class="fact-value">AR · FR · EN</div><div class="fact-label"><span class="t-fr">Langues de travail</span><span class="t-en">Working languages</span></div></div>
-        <div class="fact"><div class="fact-value">CASABLANCA</div><div class="fact-label"><span class="t-fr">Basé au Maroc</span><span class="t-en">Based in Morocco</span></div></div>
-      </div>
+      <p class="trust-line"><span class="t-en">Trusted experience across e-commerce · marketing · technology</span><span class="t-fr">Une expérience éprouvée en e-commerce · marketing · technologie</span></p>
+      <ul class="trust-tech">
+        <li>Shopify</li><li>Next.js</li><li>Meta Ads</li><li>SEO</li><li>Automation</li><li>AI</li>
+      </ul>
     </div>
   </section>
 
-  <section id="offre">
+  <!-- =========================== SELECTED WORK ======================== -->
+  <section id="work">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">01</span><span class="t-fr">OFFRE</span><span class="t-en">SERVICES</span></div>
-        <h2><span class="t-fr">Trois métiers, un seul interlocuteur.</span><span class="t-en">Three disciplines, one point of contact.</span></h2>
+        <div class="eyebrow"><span class="idx">01</span><span class="t-en">SELECTED WORK</span><span class="t-fr">RÉALISATIONS</span></div>
+        <h2><span class="t-en">Two systems, built end to end.</span><span class="t-fr">Deux systèmes, construits de bout en bout.</span></h2>
       </div>
-      <div class="svc-list reveal">
-        <article class="svc">
-          <div class="svc-idx">01</div>
-          <h3 class="svc-title"><span class="t-fr">Sites web</span><span class="t-en">Websites</span></h3>
-          <div class="svc-body">
-            <p class="t-fr">Vitrine, catalogue, réservation, plateforme métier — tous secteurs. Design sur mesure, code propre, rapide sur mobile, pensé pour convertir et pas seulement pour être joli.</p>
-            <p class="t-en">Brochure, catalog, booking, internal tooling — every sector. Custom design, clean code, fast on mobile, built to convert rather than merely to look good.</p>
-            <div class="svc-tags"><span>Next.js</span><span>React</span><span>Design UI/UX</span><span>Responsive</span><span>Core Web Vitals</span></div>
+
+      <!-- ---- Case study 1 — 212 Denim ---- -->
+      <article class="cs reveal">
+        <header class="cs-head">
+          <div class="cs-tag">212 DENIM · <span class="t-en">E-COMMERCE</span><span class="t-fr">E-COMMERCE</span></div>
+          <h3><span class="t-en">From Brand Concept to Operating E-commerce System</span><span class="t-fr">D'un concept de marque à un système e-commerce en production</span></h3>
+          <p class="cs-lede">
+            <span class="t-en">I built and operated the digital infrastructure behind a real e-commerce brand — from storefront and acquisition to order management and delivery operations.</span>
+            <span class="t-fr">J'ai construit et exploité toute l'infrastructure digitale d'une vraie marque e-commerce — de la boutique et l'acquisition jusqu'à la gestion des commandes et la livraison.</span>
+          </p>
+        </header>
+
+        <ol class="flow" aria-label="Build sequence">
+          <li>Brand</li><li>Store</li><li>Ads</li><li>Orders</li><li>ERP</li><li>Delivery</li><li>Analytics</li>
+        </ol>
+
+        <div class="psr">
+          <div class="psr-block">
+            <h4><span class="t-en">The Problem</span><span class="t-fr">Le problème</span></h4>
+            <p><span class="t-en">The brand needed a complete digital infrastructure to acquire customers, process orders and manage cash-on-delivery operations.</span><span class="t-fr">La marque avait besoin d'une infrastructure digitale complète pour acquérir des clients, traiter les commandes et gérer le paiement à la livraison.</span></p>
           </div>
-          <div class="svc-arrow" aria-hidden="true">↗</div>
+          <div class="psr-block">
+            <h4><span class="t-en">The System</span><span class="t-fr">Le système</span></h4>
+            <p><span class="t-en">E-commerce storefront + Meta Ads + tracking + order management + logistics integration + automation.</span><span class="t-fr">Boutique e-commerce + Meta Ads + tracking + gestion des commandes + intégration logistique + automatisation.</span></p>
+          </div>
+          <div class="psr-block">
+            <h4><span class="t-en">The Result</span><span class="t-fr">Le résultat</span></h4>
+            <p><span class="t-en">A brand that runs on infrastructure I own end to end — and the numbers to prove it works.</span><span class="t-fr">Une marque qui tourne sur une infrastructure que je maîtrise de bout en bout — et les chiffres qui le prouvent.</span></p>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div><b data-count="21.1" data-suffix="M+">21.1M+</b><span class="t-en">Meta impressions</span><span class="t-fr">Impressions Meta</span></div>
+          <div><b data-count="20" data-prefix="$" data-suffix="K+">$20K+</b><span class="t-en">Ad spend</span><span class="t-fr">Budget publicitaire</span></div>
+          <div><b data-count="95">95</b><span class="t-en">Campaigns</span><span class="t-fr">Campagnes</span></div>
+          <div><b data-count="405">405</b><span class="t-en">Orders</span><span class="t-fr">Commandes</span></div>
+          <div><b data-count="82" data-suffix="%">82%</b><span class="t-en">Confirmation rate</span><span class="t-fr">Taux de confirmation</span></div>
+          <div><b data-count="67" data-suffix="%">67%</b><span class="t-en">Delivery rate</span><span class="t-fr">Taux de livraison</span></div>
+        </div>
+
+        <div class="cs-shots cs-shots-2">
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/case-erp.jpg" aria-label="Enlarge the ERP dashboard">
+              <img src="assets/img/case-erp.jpg" width="1600" height="897" loading="lazy" decoding="async" alt="212 Denim ERP dashboard — orders, stock, delivery, analytics and live visitor view" />
+            </button>
+            <figcaption><span class="t-en">Custom ERP — orders, stock, delivery, suppliers, live analytics</span><span class="t-fr">ERP sur mesure — commandes, stock, livraison, fournisseurs, analytique en direct</span></figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-meta-ads.jpg" aria-label="Enlarge the Meta Ads Manager view">
+              <img src="assets/img/proof-meta-ads.jpg" width="1600" height="897" loading="lazy" decoding="async" alt="Meta Ads Manager — 95 campaigns, 21,116,161 impressions, 3,375,805 reach" />
+            </button>
+            <figcaption><span class="t-en">Meta Ads — 95 campaigns, 3.4M people reached, $0.98 CPM</span><span class="t-fr">Meta Ads — 95 campagnes, 3,4M de personnes touchées, CPM 0,98 $</span></figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-search-console.jpg" aria-label="Enlarge the Google Search Console view">
+              <img src="assets/img/proof-search-console.jpg" width="1600" height="897" loading="lazy" decoding="async" alt="Google Search Console — 7.2% CTR, average position 9.5 over 16 months" />
+            </button>
+            <figcaption><span class="t-en">Organic search — 7.2% CTR, position 9.5, ranked #1 on brand queries</span><span class="t-fr">Référencement — CTR 7,2 %, position 9,5, 1er sur les requêtes de marque</span></figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-pagespeed.jpg" aria-label="Enlarge the Google PageSpeed report">
+              <img src="assets/img/proof-pagespeed.jpg" width="1600" height="897" loading="lazy" decoding="async" alt="Google PageSpeed Insights for 212denim.com — 97 performance, 96 accessibility, 100 best practices, 100 SEO" />
+            </button>
+            <figcaption><span class="t-en">Google PageSpeed — 97 performance, 100 SEO, 100 best practices, 0.8s LCP</span><span class="t-fr">Google PageSpeed — 97 en performance, 100 en SEO, 100 en bonnes pratiques, LCP 0,8 s</span></figcaption>
+          </figure>
+        </div>
+
+        <a class="link-arrow magnetic" href="https://212denim.com" target="_blank" rel="noopener">212denim.com ↗</a>
+      </article>
+
+      <!-- ---- Case study 2 — Learn & Share ---- -->
+      <article class="cs reveal">
+        <header class="cs-head">
+          <div class="cs-tag">LEARN &amp; SHARE · <span class="t-en">CLIENT</span><span class="t-fr">CLIENT</span></div>
+          <h3><span class="t-en">Learn &amp; Share — Digital Platform</span><span class="t-fr">Learn &amp; Share — Plateforme digitale</span></h3>
+          <p class="cs-lede">
+            <span class="t-en">A Moroccan IT infrastructure and security firm serving Maroc Telecom, Aramex and Paprec — with no digital presence to match the accounts it was winning.</span>
+            <span class="t-fr">Une société marocaine d'infrastructures IT et de sûreté travaillant avec Maroc Telecom, Aramex et Paprec — sans présence digitale à la hauteur des comptes qu'elle gagnait.</span>
+          </p>
+        </header>
+
+        <div class="psr">
+          <div class="psr-block">
+            <h4><span class="t-en">The Challenge</span><span class="t-fr">Le défi</span></h4>
+            <p><span class="t-en">Eight technical specialisms and twenty years of projects, with nothing online that made an enterprise buyer take them seriously.</span><span class="t-fr">Huit domaines d'expertise et vingt ans de projets, sans rien en ligne qui inspire confiance à un acheteur grand compte.</span></p>
+          </div>
+          <div class="psr-block">
+            <h4><span class="t-en">What I Built</span><span class="t-fr">Ce que j'ai construit</span></h4>
+            <p><span class="t-en">Art direction, an entry animation, bilingual content architecture and the full front end — from mockup to production.</span><span class="t-fr">Direction artistique, animation d'entrée, architecture de contenu bilingue et tout le front — de la maquette à la mise en ligne.</span></p>
+          </div>
+          <div class="psr-block">
+            <h4><span class="t-en">Technology</span><span class="t-fr">Technologie</span></h4>
+            <p>Next.js · React · WebGL · <span class="t-en">Bilingual FR / EN routing · Vercel</span><span class="t-fr">Routage bilingue FR / EN · Vercel</span></p>
+          </div>
+        </div>
+
+        <div class="kpi kpi-3">
+          <div><b data-count="8">8</b><span class="t-en">Expertise areas structured</span><span class="t-fr">Domaines d'expertise structurés</span></div>
+          <div><b data-count="2">2</b><span class="t-en">Languages, one codebase</span><span class="t-fr">Langues, une seule base de code</span></div>
+          <div><b data-count="100" data-suffix="%">100%</b><span class="t-en">Custom built, no template</span><span class="t-fr">Sur mesure, sans template</span></div>
+        </div>
+
+        <div class="cs-shots cs-shots-1">
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/case-learnandshare.jpg" aria-label="Enlarge the Learn &amp; Share homepage">
+              <img src="assets/img/case-learnandshare.jpg" width="1600" height="897" loading="lazy" decoding="async" alt="Learn &amp; Share homepage — Concevoir, installer et maintenir vos infrastructures techniques" />
+            </button>
+            <figcaption><span class="t-en">Homepage, with client logos: TEC Group, Hôtel des Arts, CCEB, Auto Nejma, Paprec, CMIM</span><span class="t-fr">Page d'accueil, avec les logos clients : TEC Group, Hôtel des Arts, CCEB, Auto Nejma, Paprec, CMIM</span></figcaption>
+          </figure>
+        </div>
+
+        <a class="link-arrow magnetic" href="https://learn-and-share-ivory.vercel.app/" target="_blank" rel="noopener">learn-and-share.vercel.app ↗</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================ MID CTA ============================= -->
+  <section class="cta-band">
+    <div class="wrap cta-inner reveal">
+      <h2><span class="t-en">Already getting traffic but not enough customers?</span><span class="t-fr">Vous avez du trafic mais pas assez de clients ?</span></h2>
+      <p><span class="t-en">Let's identify where you're losing them and build the system to fix it.</span><span class="t-fr">Identifions où vous les perdez, et construisons le système qui corrige ça.</span></p>
+      <a class="btn magnetic js-book" href="#contact"><span class="t-en">Book a Strategy Call →</span><span class="t-fr">Réserver un appel stratégique →</span></a>
+    </div>
+  </section>
+
+  <!-- =========================== THE SYSTEM =========================== -->
+  <section id="system">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">02</span><span class="t-en">THE SYSTEM</span><span class="t-fr">LE SYSTÈME</span></div>
+        <h2><span class="t-en">Five layers. One revenue engine.</span><span class="t-fr">Cinq couches. Un seul moteur de revenu.</span></h2>
+      </div>
+      <ol class="layers reveal">
+        <li>
+          <span class="ly-n">01</span>
+          <span class="ly-t"><span class="t-en">Acquisition</span><span class="t-fr">Acquisition</span></span>
+          <span class="ly-d"><span class="t-en">Paid campaigns, organic search and creative that bring qualified people in.</span><span class="t-fr">Campagnes payantes, référencement et créas qui amènent des gens qualifiés.</span></span>
+        </li>
+        <li>
+          <span class="ly-n">02</span>
+          <span class="ly-t"><span class="t-en">Conversion</span><span class="t-fr">Conversion</span></span>
+          <span class="ly-d"><span class="t-en">A site and checkout built so the traffic you already pay for turns into orders.</span><span class="t-fr">Un site et un tunnel conçus pour que le trafic déjà payé devienne des commandes.</span></span>
+        </li>
+        <li>
+          <span class="ly-n">03</span>
+          <span class="ly-t"><span class="t-en">Automation</span><span class="t-fr">Automatisation</span></span>
+          <span class="ly-d"><span class="t-en">Follow-up, confirmation and reporting that run without anyone touching them.</span><span class="t-fr">Relance, confirmation et reporting qui tournent sans intervention.</span></span>
+        </li>
+        <li>
+          <span class="ly-n">04</span>
+          <span class="ly-t"><span class="t-en">Operations</span><span class="t-fr">Opérations</span></span>
+          <span class="ly-d"><span class="t-en">Order management, stock and delivery — the part most agencies never touch.</span><span class="t-fr">Gestion des commandes, stock et livraison — ce que la plupart des agences ne touchent jamais.</span></span>
+        </li>
+        <li>
+          <span class="ly-n">05</span>
+          <span class="ly-t"><span class="t-en">Analytics</span><span class="t-fr">Analytique</span></span>
+          <span class="ly-d"><span class="t-en">One dashboard that tells you what each dirham of spend actually returned.</span><span class="t-fr">Un tableau de bord qui dit ce que chaque dirham dépensé a réellement rapporté.</span></span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ SERVICES ============================ -->
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">03</span><span class="t-en">WHAT I BUILD</span><span class="t-fr">CE QUE JE CONSTRUIS</span></div>
+        <h2><span class="t-en">Four systems, not forty services.</span><span class="t-fr">Quatre systèmes, pas quarante services.</span></h2>
+      </div>
+      <div class="build-grid reveal">
+        <article class="bd">
+          <h3><span class="t-en">Conversion Systems</span><span class="t-fr">Systèmes de conversion</span></h3>
+          <p><span class="t-en">Websites, landing pages and CRO.</span><span class="t-fr">Sites web, landing pages et CRO.</span></p>
         </article>
-        <article class="svc">
-          <div class="svc-idx">02</div>
-          <h3 class="svc-title"><span class="t-fr">E-commerce COD</span><span class="t-en">COD e-commerce</span></h3>
-          <div class="svc-body">
-            <p class="t-fr">Boutique en paiement à la livraison pensée pour le marché marocain : tunnel de commande en une page, confirmation téléphonique, suivi livreur, gestion des retours et du stock. Je l'opère tous les jours sur ma propre marque.</p>
-            <p class="t-en">Cash-on-delivery storefronts built for the Moroccan market: one-page checkout, phone confirmation, courier tracking, returns and stock. I run this daily on my own brand.</p>
-            <div class="svc-tags"><span>Paiement à la livraison</span><span>Shopify</span><span>Tunnel de commande</span><span>Logistique</span><span>ERP sur mesure</span></div>
-          </div>
-          <div class="svc-arrow" aria-hidden="true">↗</div>
+        <article class="bd">
+          <h3><span class="t-en">E-commerce Systems</span><span class="t-fr">Systèmes e-commerce</span></h3>
+          <p><span class="t-en">Shopify, custom storefronts and cash on delivery.</span><span class="t-fr">Shopify, boutiques sur mesure et paiement à la livraison.</span></p>
         </article>
-        <article class="svc">
-          <div class="svc-idx">03</div>
-          <h3 class="svc-title"><span class="t-fr">SEO &amp; présence digitale</span><span class="t-en">SEO &amp; digital presence</span></h3>
-          <div class="svc-body">
-            <p class="t-fr">Être trouvé sur Google et exister sur les réseaux. Référencement bilingue arabe/français, contenu, publicité Meta, gestion des pages Instagram et Facebook, et un tableau de bord pour suivre ce que ça rapporte.</p>
-            <p class="t-en">Get found on Google and exist on social. Bilingual Arabic/French SEO, content, Meta advertising, Instagram and Facebook management, plus a dashboard to track what it returns.</p>
-            <div class="svc-tags"><span>SEO</span><span>Google Search Console</span><span>Meta Ads</span><span>Instagram</span><span>GA4</span></div>
-          </div>
-          <div class="svc-arrow" aria-hidden="true">↗</div>
+        <article class="bd">
+          <h3><span class="t-en">Acquisition Systems</span><span class="t-fr">Systèmes d'acquisition</span></h3>
+          <p><span class="t-en">Meta Ads, tracking and creative.</span><span class="t-fr">Meta Ads, tracking et création publicitaire.</span></p>
+        </article>
+        <article class="bd">
+          <h3><span class="t-en">Automation</span><span class="t-fr">Automatisation</span></h3>
+          <p><span class="t-en">CRM, WhatsApp, workflows and AI.</span><span class="t-fr">CRM, WhatsApp, workflows et IA.</span></p>
+        </article>
+      </div>
+      <p class="build-close reveal"><span class="t-en">One system. One objective: more customers.</span><span class="t-fr">Un seul système. Un seul objectif : plus de clients.</span></p>
+    </div>
+  </section>
+
+  <!-- ========================= WHO I WORK WITH ======================== -->
+  <section id="clients">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">04</span><span class="t-en">WHO I WORK WITH</span><span class="t-fr">AVEC QUI JE TRAVAILLE</span></div>
+        <h2><span class="t-en">Businesses that already have something to scale.</span><span class="t-fr">Des entreprises qui ont déjà quelque chose à faire grandir.</span></h2>
+      </div>
+      <div class="who-grid reveal">
+        <article class="who">
+          <h3><span class="t-en">E-commerce Brands</span><span class="t-fr">Marques e-commerce</span></h3>
+          <p><span class="t-en">Already selling, ready to scale.</span><span class="t-fr">Qui vendent déjà, prêtes à passer à l'échelle.</span></p>
+        </article>
+        <article class="who">
+          <h3><span class="t-en">Premium Services</span><span class="t-fr">Services premium</span></h3>
+          <p><span class="t-en">Businesses where each customer has high value.</span><span class="t-fr">Où chaque client a une valeur élevée.</span></p>
+        </article>
+        <article class="who">
+          <h3><span class="t-en">Real Estate</span><span class="t-fr">Immobilier</span></h3>
+          <p><span class="t-en">Lead generation and conversion systems.</span><span class="t-fr">Génération de leads et systèmes de conversion.</span></p>
+        </article>
+        <article class="who">
+          <h3><span class="t-en">Automotive</span><span class="t-fr">Automobile</span></h3>
+          <p><span class="t-en">Premium dealerships, detailing and automotive services.</span><span class="t-fr">Concessions premium, detailing et services automobiles.</span></p>
         </article>
       </div>
     </div>
   </section>
 
-  <section id="profil">
+  <!-- ============================= PROCESS ============================ -->
+  <section id="process">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">02</span><span class="t-fr">PROFIL</span><span class="t-en">PROFILE</span></div>
-        <h2><span class="t-fr">Le produit et le code.</span><span class="t-en">The product and the code.</span></h2>
+        <div class="eyebrow"><span class="idx">05</span><span class="t-en">HOW WE WORK</span><span class="t-fr">COMMENT ON TRAVAILLE</span></div>
+        <h2><span class="t-en">Five steps, no mystery.</span><span class="t-fr">Cinq étapes, aucun mystère.</span></h2>
       </div>
-      <div class="profile-grid">
-        <div class="profile-text reveal">
-          <p class="t-fr">Entrepreneur spécialisé en e-commerce et développement de marques. Plus de trois ans à créer et piloter des projets digitaux, de la stratégie de marque à l'infrastructure technique. Fondateur de 212&nbsp;Denim, marque de jeans premium marocaine, où je pilote l'ensemble des opérations : sourcing, marketing, développement web, expérience client, logistique et analyse de performance.</p>
-          <p class="t-en">Entrepreneur specialized in e-commerce and brand building. Three-plus years designing and running digital projects, from brand strategy to technical infrastructure. Founder of 212&nbsp;Denim, a premium Moroccan denim label, where I run the full operation: sourcing, marketing, web development, customer experience, logistics and performance analysis.</p>
-          <p class="t-fr">Mon terrain de jeu : tenir les deux bouts de la chaîne, le produit et le digital, sans jamais lâcher l'un pour l'autre.</p>
-          <p class="t-en">My focus: holding both ends of the chain — the product and the digital layer — without ever dropping one for the other.</p>
+      <ol class="steps reveal">
+        <li><span class="st-n">01</span><span class="st-t"><span class="t-en">Diagnose</span><span class="t-fr">Diagnostic</span></span><span class="st-d"><span class="t-en">We identify where you're losing customers.</span><span class="t-fr">On identifie où vous perdez vos clients.</span></span></li>
+        <li><span class="st-n">02</span><span class="st-t"><span class="t-en">Strategize</span><span class="t-fr">Stratégie</span></span><span class="st-d"><span class="t-en">We design the acquisition and conversion system.</span><span class="t-fr">On conçoit le système d'acquisition et de conversion.</span></span></li>
+        <li><span class="st-n">03</span><span class="st-t"><span class="t-en">Build</span><span class="t-fr">Construction</span></span><span class="st-d"><span class="t-en">We build the website, funnel and automation.</span><span class="t-fr">On construit le site, le tunnel et l'automatisation.</span></span></li>
+        <li><span class="st-n">04</span><span class="st-t"><span class="t-en">Launch</span><span class="t-fr">Lancement</span></span><span class="st-d"><span class="t-en">Tracking, analytics and campaigns go live.</span><span class="t-fr">Tracking, analytique et campagnes passent en production.</span></span></li>
+        <li><span class="st-n">05</span><span class="st-t"><span class="t-en">Optimize</span><span class="t-fr">Optimisation</span></span><span class="st-d"><span class="t-en">We improve the system based on real data.</span><span class="t-fr">On améliore le système à partir des données réelles.</span></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================== ABOUT ============================= -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">06</span><span class="t-en">ABOUT</span><span class="t-fr">À PROPOS</span></div>
+        <h2><span class="t-en">I don't just build websites.</span><span class="t-fr">Je ne fais pas que des sites web.</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p class="t-en">I'm Othmane, a developer and entrepreneur focused on building digital systems that generate business results.</p>
+          <p class="t-fr">Je suis Othmane, développeur et entrepreneur, concentré sur des systèmes digitaux qui produisent des résultats commerciaux.</p>
+          <p class="t-en">I've worked across e-commerce, paid acquisition, automation and web development — combining technical execution with real-world business operations.</p>
+          <p class="t-fr">J'ai travaillé en e-commerce, acquisition payante, automatisation et développement web — en combinant l'exécution technique et l'exploitation réelle d'une entreprise.</p>
+          <p class="t-en">I build systems designed to acquire, convert and retain customers.</p>
+          <p class="t-fr">Je construis des systèmes conçus pour acquérir, convertir et fidéliser des clients.</p>
+          <p class="about-loc">Casablanca, Morocco · <span class="t-en">Available worldwide</span><span class="t-fr">Disponible partout</span></p>
+
+          <ul class="why">
+            <li><b><span class="t-en">Business-first</span><span class="t-fr">Le business d'abord</span></b><span class="t-en">I focus on revenue, not just design.</span><span class="t-fr">Je me concentre sur le revenu, pas seulement sur le design.</span></li>
+            <li><b><span class="t-en">Technical</span><span class="t-fr">Technique</span></b><span class="t-en">I can build the entire system, not just the front end.</span><span class="t-fr">Je peux construire tout le système, pas seulement le front.</span></li>
+            <li><b><span class="t-en">Hands-on</span><span class="t-fr">Opérationnel</span></b><span class="t-en">I understand acquisition, operations and conversion.</span><span class="t-fr">Je comprends l'acquisition, les opérations et la conversion.</span></li>
+            <li><b><span class="t-en">Built in the real world</span><span class="t-fr">Éprouvé sur le terrain</span></b><span class="t-en">I have built and operated my own e-commerce infrastructure.</span><span class="t-fr">J'ai construit et exploité ma propre infrastructure e-commerce.</span></li>
+          </ul>
         </div>
         <div class="reveal">
           <div class="profile-photo">
             <span class="crop-mark tl" aria-hidden="true"></span>
             <span class="crop-mark br" aria-hidden="true"></span>
-            <img src="assets/img/portrait.jpg" alt="Othmane Baroud" width="826" height="1000" />
+            <img src="assets/img/portrait.jpg" alt="Othmane Baroud" width="826" height="1000" loading="lazy" />
           </div>
-          <div class="photo-cap"><span class="t-fr">Casablanca — en séance de travail</span><span class="t-en">Casablanca — at work</span></div>
+          <div class="photo-cap"><span class="t-en">Casablanca — at work</span><span class="t-fr">Casablanca — en séance de travail</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="travaux" class="feature">
-    <div class="wrap feature-head reveal">
-      <div class="eyebrow"><span class="idx">03</span><span class="t-fr">TRAVAUX SÉLECTIONNÉS</span><span class="t-en">SELECTED WORK</span></div>
-      <div class="feature-title-row">
-        <h2 class="mask-reveal" id="mrFeat"><span class="word" style="--i:0"><span>212</span></span> <span class="word" style="--i:1"><span>DENIM</span></span></h2>
-        <span class="feature-year">2025 — <span class="t-fr">Présent</span><span class="t-en">Present</span></span>
-      </div>
-      <div class="feature-tags">
-        <span>E-commerce</span><span><span class="t-fr">Croissance</span><span class="t-en">Growth</span></span><span><span class="t-fr">Marque</span><span class="t-en">Brand</span></span><span><span class="t-fr">Ingénierie</span><span class="t-en">Engineering</span></span>
-      </div>
-      <p class="feature-desc t-fr">Marque de denim premium au Maroc, fondée avec un expert du sourcing (30 ans de métier). Un catalogue curaté — Levi's, Calvin Klein, Massimo Dutti, Antony Morato — vendu via un site Next.js que j'ai conçu et que j'exploite au quotidien : catalogue, publicité, paiement à la livraison, analyse de performance.</p>
-      <p class="feature-desc t-en">Premium denim label in Morocco, founded with a sourcing expert (30 years in the trade). A curated catalog — Levi's, Calvin Klein, Massimo Dutti, Antony Morato — sold through a Next.js site I designed and run day to day: catalog, advertising, cash-on-delivery, performance analysis.</p>
-    </div>
-
-    <div class="feature-gallery reveal">
-      <figure data-view-fr="Voir" data-view-en="View"><img src="assets/img/gal-1.jpg" alt="212 Denim — pièce du catalogue" loading="lazy" /></figure>
-      <figure data-view-fr="Voir" data-view-en="View"><img src="assets/img/gal-2.jpg" alt="212 Denim — contrôle qualité et mesures" loading="lazy" /></figure>
-      <figure data-view-fr="Voir" data-view-en="View"><img src="assets/img/gal-3.jpg" alt="212 Denim — détail finitions" loading="lazy" /></figure>
-      <figure data-view-fr="Voir" data-view-en="View"><img src="assets/img/gal-4.jpg" alt="212 Denim — pièce du catalogue" loading="lazy" /></figure>
-    </div>
-
-    <div class="wrap">
-      <div class="stack-pin" id="stackPin">
-        <article class="stack-card">
-          <div class="stk-idx">01 — <span class="t-fr">MARQUE &amp; CROISSANCE</span><span class="t-en">BRAND &amp; GROWTH</span></div>
-          <h4><span class="t-fr">Faire exister la marque, puis la vendre.</span><span class="t-en">Make the brand exist, then sell it.</span></h4>
-          <ul>
-            <li><span class="t-fr">Création de la marque et positionnement premium</span><span class="t-en">Brand creation and premium positioning</span></li>
-            <li><span class="t-fr">Campagnes Meta Ads : ciblage, suivi CPA / CTR / CPM / ROAS</span><span class="t-en">Meta Ads: targeting, CPA / CTR / CPM / ROAS tracking</span></li>
-            <li><span class="t-fr">SEO bilingue (AR / FR) et stratégie de contenu</span><span class="t-en">Bilingual SEO (AR / FR) and content strategy</span></li>
-          </ul>
-        </article>
-        <article class="stack-card">
-          <div class="stk-idx">02 — <span class="t-fr">PRODUIT &amp; INGÉNIERIE</span><span class="t-en">PRODUCT &amp; ENGINEERING</span></div>
-          <h4><span class="t-fr">Le site est un produit, pas une brochure.</span><span class="t-en">The site is a product, not a brochure.</span></h4>
-          <ul>
-            <li><span class="t-fr">Site Next.js (App Router) sur l'API Shopify Storefront, arabe RTL / français</span><span class="t-en">Next.js (App Router) storefront on the Shopify API, Arabic RTL / French</span></li>
-            <li><span class="t-fr">Optimisation UX et taux de conversion du parcours d'achat</span><span class="t-en">UX and conversion-rate optimization of the purchase journey</span></li>
-            <li><span class="t-fr">Dashboard GA4, automatisations via API et Apps Script</span><span class="t-en">GA4 dashboard, automation via API and Apps Script</span></li>
-          </ul>
-        </article>
-        <article class="stack-card">
-          <div class="stk-idx">03 — <span class="t-fr">OPÉRATIONS</span><span class="t-en">OPERATIONS</span></div>
-          <h4><span class="t-fr">Rien ne tourne sans logistique.</span><span class="t-en">Nothing runs without logistics.</span></h4>
-          <ul>
-            <li><span class="t-fr">Sourcing, relation fournisseurs, logistique paiement à la livraison</span><span class="t-en">Sourcing, supplier relations, cash-on-delivery logistics</span></li>
-            <li><span class="t-fr">Gestion du catalogue Shopify — coupes Slim et Droite</span><span class="t-en">Shopify catalog management — Slim and Straight fits</span></li>
-          </ul>
-        </article>
-      </div>
-    </div>
-
-    <div class="wrap">
-      <div class="case-list">
-        <article class="case reveal">
-          <div class="case-text">
-            <div class="case-eyebrow"><span class="t-fr">CLIENT — 2026</span><span class="t-en">CLIENT — 2026</span></div>
-            <h3>Learn &amp; Share</h3>
-            <p class="t-fr">Site vitrine pour une société marocaine d'infrastructures IT et de sûreté. Direction artistique, animation d'entrée, contenu bilingue et intégration Next.js — livré de la maquette à la mise en ligne.</p>
-            <p class="t-en">Brochure site for a Moroccan IT infrastructure and security firm. Art direction, entry animation, bilingual content and Next.js build — delivered from mockup to production.</p>
-            <div class="case-facts">
-              <div><b>8</b><span class="t-fr">domaines d'expertise</span><span class="t-en">expertise areas</span></div>
-              <div><b>2</b><span class="t-fr">langues</span><span class="t-en">languages</span></div>
-              <div><b>100%</b><span class="t-fr">sur mesure</span><span class="t-en">custom built</span></div>
-            </div>
-            <a class="link-arrow magnetic" href="https://learn-and-share-ivory.vercel.app/" target="_blank" rel="noopener">learn-and-share.vercel.app ↗</a>
-          </div>
-          <button type="button" class="case-media shot-btn" data-full="assets/img/case-learnandshare.jpg" aria-label="Agrandir la capture du site Learn &amp; Share">
-            <img src="assets/img/case-learnandshare.jpg" width="1600" height="897" loading="lazy" decoding="async"
-                 alt="Page d'accueil du site Learn &amp; Share — « Concevoir, installer et maintenir vos infrastructures techniques »" />
-          </button>
-        </article>
-
-        <article class="case reveal">
-          <div class="case-text">
-            <div class="case-eyebrow"><span class="t-fr">PRODUIT INTERNE — 212 DENIM</span><span class="t-en">INTERNAL PRODUCT — 212 DENIM</span></div>
-            <h3><span class="t-fr">ERP &amp; tableau de bord</span><span class="t-en">ERP &amp; dashboard</span></h3>
-            <p class="t-fr">Un back-office complet que j'ai construit pour piloter la marque : commandes, stock, livraison, clients, fournisseurs, analytique et vue en direct des visiteurs sur une carte du Maroc. C'est l'outil qui fait tourner l'opération au quotidien.</p>
-            <p class="t-en">A full back office I built to run the brand: orders, stock, delivery, customers, suppliers, analytics and a live visitor map of Morocco. It is the tool the daily operation runs on.</p>
-            <div class="case-facts">
-              <div><b>405</b><span class="t-fr">commandes / 12 mois</span><span class="t-en">orders / 12 months</span></div>
-              <div><b>82%</b><span class="t-fr">taux de confirmation</span><span class="t-en">confirmation rate</span></div>
-              <div><b>67%</b><span class="t-fr">taux de livraison</span><span class="t-en">delivery rate</span></div>
-            </div>
-            <span class="link-arrow" aria-disabled="true"><span class="t-fr">Accès privé — démo sur demande</span><span class="t-en">Private access — demo on request</span></span>
-          </div>
-          <button type="button" class="case-media shot-btn" data-full="assets/img/case-erp.jpg" aria-label="Agrandir la capture du tableau de bord ERP">
-            <img src="assets/img/case-erp.jpg" width="1600" height="897" loading="lazy" decoding="async"
-                 alt="Tableau de bord ERP 212 Denim — commandes, stock, livraison, analytique et vue en direct" />
-          </button>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="preuves" class="proof">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">04</span><span class="t-fr">PREUVES</span><span class="t-en">PROOF</span></div>
-        <h2><span class="t-fr">Des chiffres, pas des promesses.</span><span class="t-en">Numbers, not promises.</span></h2>
-      </div>
-
-      <div class="proof-grid reveal">
-        <div class="pf">
-          <div class="pf-val" data-count="21.1" data-suffix="M">21.1M</div>
-          <div class="pf-lbl"><span class="t-fr">Impressions publicitaires diffusées</span><span class="t-en">Ad impressions delivered</span></div>
-          <div class="pf-src">Meta Ads Manager</div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="3.4" data-suffix="M">3.4M</div>
-          <div class="pf-lbl"><span class="t-fr">Personnes touchées</span><span class="t-en">People reached</span></div>
-          <div class="pf-src">Meta Ads Manager</div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="20" data-prefix="$" data-suffix="K">$20K</div>
-          <div class="pf-lbl"><span class="t-fr">Budget publicitaire piloté</span><span class="t-en">Ad budget managed</span></div>
-          <div class="pf-src">95 <span class="t-fr">campagnes</span><span class="t-en">campaigns</span></div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="61" data-suffix="K">61K</div>
-          <div class="pf-lbl"><span class="t-fr">Abonnés Instagram + Facebook</span><span class="t-en">Instagram + Facebook followers</span></div>
-          <div class="pf-src">@212_denim</div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="7.2" data-suffix="%">7.2%</div>
-          <div class="pf-lbl"><span class="t-fr">CTR moyen sur Google</span><span class="t-en">Average CTR on Google</span></div>
-          <div class="pf-src">Search Console · 16 <span class="t-fr">mois</span><span class="t-en">months</span></div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="9.5">9.5</div>
-          <div class="pf-lbl"><span class="t-fr">Position moyenne sur Google</span><span class="t-en">Average Google position</span></div>
-          <div class="pf-src">212denim.com</div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="1" data-suffix="er">1er</div>
-          <div class="pf-lbl"><span class="t-fr">Sur « 212 denim » et « 212 jeans »</span><span class="t-en">On “212 denim” and “212 jeans”</span></div>
-          <div class="pf-src"><span class="t-fr">Requêtes de marque</span><span class="t-en">Brand queries</span></div>
-        </div>
-        <div class="pf">
-          <div class="pf-val" data-count="2">2</div>
-          <div class="pf-lbl"><span class="t-fr">Plateformes développées de zéro</span><span class="t-en">Platforms built from scratch</span></div>
-          <div class="pf-src"><span class="t-fr">Boutique + ERP</span><span class="t-en">Storefront + ERP</span></div>
-        </div>
-      </div>
-
-      <div class="plat-list reveal">
-        <div class="plat">
-          <span class="plat-name">Instagram</span>
-          <span class="plat-meta">@212_denim</span>
-          <span class="plat-val">36 000 <span class="t-fr">abonnés</span><span class="t-en">followers</span></span>
-          <a href="https://www.instagram.com/212_denim/" target="_blank" rel="noopener">↗</a>
-        </div>
-        <div class="plat">
-          <span class="plat-name">Facebook</span>
-          <span class="plat-meta">/212DENIM</span>
-          <span class="plat-val">25 000 <span class="t-fr">abonnés</span><span class="t-en">followers</span></span>
-          <a href="https://web.facebook.com/212DENIM/" target="_blank" rel="noopener">↗</a>
-        </div>
-        <div class="plat">
-          <span class="plat-name">212denim.com</span>
-          <span class="plat-meta"><span class="t-fr">Boutique Next.js — arabe / français</span><span class="t-en">Next.js storefront — Arabic / French</span></span>
-          <span class="plat-val">14 000 <span class="t-fr">impressions Google</span><span class="t-en">Google impressions</span></span>
-          <a href="https://212denim.com" target="_blank" rel="noopener">↗</a>
-        </div>
-        <div class="plat">
-          <span class="plat-name">Learn &amp; Share</span>
-          <span class="plat-meta"><span class="t-fr">Site client — infrastructures IT</span><span class="t-en">Client site — IT infrastructure</span></span>
-          <span class="plat-val"><span class="t-fr">Livré 2026</span><span class="t-en">Shipped 2026</span></span>
-          <a href="https://learn-and-share-ivory.vercel.app/" target="_blank" rel="noopener">↗</a>
-        </div>
-      </div>
-
-      <div class="shots reveal">
-        <div class="shots-head">
-          <span class="t-fr">Captures des tableaux de bord — cliquez pour agrandir</span>
-          <span class="t-en">Dashboard captures — click to enlarge</span>
-        </div>
-        <div class="shots-grid">
-          <figure class="shot">
-            <button type="button" class="shot-btn" data-full="assets/img/proof-meta-ads.jpg" aria-label="Agrandir la capture Meta Ads Manager">
-              <img src="assets/img/proof-meta-ads.jpg" width="1600" height="897" loading="lazy" decoding="async"
-                   alt="Meta Ads Manager — 95 campagnes, 21 116 161 impressions, 3 375 805 de couverture, 20 743 $ dépensés" />
-            </button>
-            <figcaption>
-              <b>Meta Ads Manager</b>
-              <span class="t-fr">95 campagnes · 21 116 161 impressions · 3 375 805 personnes touchées · CPM 0,98 $</span>
-              <span class="t-en">95 campaigns · 21,116,161 impressions · 3,375,805 reached · $0.98 CPM</span>
-            </figcaption>
-          </figure>
-          <figure class="shot">
-            <button type="button" class="shot-btn" data-full="assets/img/proof-search-console.jpg" aria-label="Agrandir la capture Google Search Console">
-              <img src="assets/img/proof-search-console.jpg" width="1600" height="897" loading="lazy" decoding="async"
-                   alt="Google Search Console — 212denim.com, 1,01 k clics, 14 k impressions, CTR 7,2 %, position moyenne 9,5" />
-            </button>
-            <figcaption>
-              <b>Google Search Console</b>
-              <span class="t-fr">16 mois · 1 010 clics · 14 000 impressions · CTR 7,2 % · position 9,5</span>
-              <span class="t-en">16 months · 1,010 clicks · 14,000 impressions · 7.2% CTR · position 9.5</span>
-            </figcaption>
-          </figure>
-          <figure class="shot">
-            <button type="button" class="shot-btn" data-full="assets/img/proof-meta-insights.jpg" aria-label="Agrandir la capture Meta Business Suite">
-              <img src="assets/img/proof-meta-insights.jpg" width="1600" height="897" loading="lazy" decoding="async"
-                   alt="Meta Business Suite — 11,4 M de vues de contenu, 2 898 064 spectateurs, 65,6 K interactions" />
-            </button>
-            <figcaption>
-              <b>Meta Business Suite</b>
-              <span class="t-fr">2026 · 11,4 M de vues · 2 898 064 spectateurs · 65,6 K interactions</span>
-              <span class="t-en">2026 · 11.4M views · 2,898,064 viewers · 65.6K interactions</span>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="parcours">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">05</span><span class="t-fr">PARCOURS</span><span class="t-en">EXPERIENCE</span></div>
-        <h2><span class="t-fr">Chronologie.</span><span class="t-en">Timeline.</span></h2>
-      </div>
-      <ul class="slim-list reveal">
-        <li class="slim-item">
-          <span class="slim-date">2025 — <span class="t-fr">Présent</span><span class="t-en">Present</span></span>
-          <span class="slim-role"><span class="t-fr">Fondateur &amp; CEO</span><span class="t-en">Founder &amp; CEO</span> — 212 Denim</span>
-          <span class="slim-loc">Casablanca</span>
-          <span class="slim-arrow" aria-hidden="true">↗</span>
-        </li>
-        <li class="slim-item">
-          <span class="slim-date">2022 — 2025</span>
-          <span class="slim-role"><span class="t-fr">Freelance — Digital &amp; E-commerce</span><span class="t-en">Freelance — Digital &amp; E-commerce</span></span>
-          <span class="slim-loc"><span class="t-fr">Indépendant, Maroc</span><span class="t-en">Independent, Morocco</span></span>
-          <span class="slim-arrow" aria-hidden="true">↗</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="competences">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">06</span><span class="t-fr">COMPÉTENCES</span><span class="t-en">TOOLKIT</span></div>
-        <h2><span class="t-fr">La boîte à outils.</span><span class="t-en">The toolkit.</span></h2>
-      </div>
-      <div class="toolkit-grid">
-        <div></div>
-        <div class="toolkit-groups reveal">
-          <div class="tk-group"><h4>Business</h4><div class="tk-chips">
-            <span class="chip"><span class="t-fr">Création de marque</span><span class="t-en">Brand building</span></span>
-            <span class="chip"><span class="t-fr">Développement commercial</span><span class="t-en">Business development</span></span>
-            <span class="chip">Supply Chain</span>
-            <span class="chip"><span class="t-fr">Négociation fournisseurs</span><span class="t-en">Supplier negotiation</span></span>
-          </div></div>
-          <div class="tk-group"><h4>E-commerce</h4><div class="tk-chips">
-            <span class="chip">Shopify</span><span class="chip">Next.js</span><span class="chip">CRO</span><span class="chip">SEO</span>
-            <span class="chip"><span class="t-fr">Parcours client</span><span class="t-en">Customer journey</span></span>
-          </div></div>
-          <div class="tk-group"><h4>Marketing</h4><div class="tk-chips">
-            <span class="chip">Meta Ads</span><span class="chip">Google Analytics (GA4)</span><span class="chip">Growth Marketing</span><span class="chip">Copywriting</span>
-          </div></div>
-          <div class="tk-group"><h4><span class="t-fr">Technique</span><span class="t-en">Technical</span></h4><div class="tk-chips">
-            <span class="chip">JavaScript</span><span class="chip">APIs</span><span class="chip">Vercel</span>
-            <span class="chip"><span class="t-fr">Automatisation</span><span class="t-en">Automation</span></span><span class="chip">Supabase</span>
-          </div></div>
-        </div>
-      </div>
-      <div class="meta-grid">
-        <div></div>
-        <div class="meta-cols reveal">
-          <div>
-            <h4><span class="t-fr">Formation</span><span class="t-en">Education</span></h4>
-            <div class="edu-item"><div class="deg"><span class="t-fr">Master Supply Chain Management</span><span class="t-en">Master's in Supply Chain Management</span></div><div class="school">ENCG Settat</div></div>
-          </div>
-          <div>
-            <h4><span class="t-fr">Langues</span><span class="t-en">Languages</span></h4>
-            <ul class="lang-list">
-              <li><span>Arabe</span><span><span class="t-fr">langue maternelle</span><span class="t-en">native</span></span></li>
-              <li><span><span class="t-fr">Français</span><span class="t-en">French</span></span><span><span class="t-fr">courant</span><span class="t-en">fluent</span></span></li>
-              <li><span><span class="t-fr">Anglais</span><span class="t-en">English</span></span><span><span class="t-fr">professionnel</span><span class="t-en">professional</span></span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  <!-- ============================= CONTACT ============================ -->
   <section id="contact" class="contact">
     <div class="wrap contact-inner">
       <div class="eyebrow"><span class="idx">07</span>CONTACT</div>
-      <h2 class="reveal"><span class="t-fr">On construit quelque chose ?</span><span class="t-en">Let's build something.</span></h2>
-      <a class="contact-email reveal magnetic" href="mailto:barorede@gmail.com">barorede@gmail.com</a>
-      <div class="contact-details reveal">
-        <div><span class="lbl"><span class="t-fr">Téléphone</span><span class="t-en">Phone</span></span><a href="tel:+212661698862">+212 6 61 69 88 62</a></div>
-        <div><span class="lbl">212 Denim</span><a href="https://212denim.com" target="_blank" rel="noopener">212denim.com ↗</a></div>
-        <div><span class="lbl"><span class="t-fr">Coordonnées</span><span class="t-en">Coordinates</span></span><span>N 33.5731° W 7.5898°</span></div>
+      <h2 class="reveal"><span class="t-en">Your traffic is already costing you money. Let's make it convert.</span><span class="t-fr">Votre trafic vous coûte déjà de l'argent. Faisons-le convertir.</span></h2>
+
+      <div class="contact-grid">
+        <form class="qform reveal" id="qform" novalidate>
+          <p class="qform-title"><span class="t-en">Let's talk about your business</span><span class="t-fr">Parlons de votre activité</span></p>
+
+          <label class="fld">
+            <span class="fld-l"><span class="t-en">Name</span><span class="t-fr">Nom</span> <i>*</i></span>
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
+          <label class="fld">
+            <span class="fld-l"><span class="t-en">Company</span><span class="t-fr">Entreprise</span></span>
+            <input type="text" name="company" autocomplete="organization" />
+          </label>
+          <label class="fld">
+            <span class="fld-l"><span class="t-en">Email</span><span class="t-fr">Email</span> <i>*</i></span>
+            <input type="email" name="email" required autocomplete="email" />
+          </label>
+          <label class="fld">
+            <span class="fld-l"><span class="t-en">Website</span><span class="t-fr">Site web</span></span>
+            <input type="text" name="website" placeholder="example.com" />
+          </label>
+
+          <fieldset class="fld fld-wide">
+            <legend class="fld-l"><span class="t-en">What do you want to improve?</span><span class="t-fr">Que voulez-vous améliorer ?</span></legend>
+            <div class="chips-in">
+              <label><input type="checkbox" name="goal" value="More leads" /><span class="t-en">More leads</span><span class="t-fr">Plus de leads</span></label>
+              <label><input type="checkbox" name="goal" value="More sales" /><span class="t-en">More sales</span><span class="t-fr">Plus de ventes</span></label>
+              <label><input type="checkbox" name="goal" value="Better website" /><span class="t-en">Better website</span><span class="t-fr">Meilleur site</span></label>
+              <label><input type="checkbox" name="goal" value="Better conversion" /><span class="t-en">Better conversion</span><span class="t-fr">Meilleure conversion</span></label>
+              <label><input type="checkbox" name="goal" value="Automation" /><span class="t-en">Automation</span><span class="t-fr">Automatisation</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fld fld-wide">
+            <legend class="fld-l"><span class="t-en">Current monthly marketing budget</span><span class="t-fr">Budget marketing mensuel actuel</span></legend>
+            <div class="chips-in">
+              <label><input type="radio" name="budget" value="&lt;$1k" /><span>&lt;$1k</span></label>
+              <label><input type="radio" name="budget" value="$1k–5k" /><span>$1k–5k</span></label>
+              <label><input type="radio" name="budget" value="$5k–10k" /><span>$5k–10k</span></label>
+              <label><input type="radio" name="budget" value="$10k+" /><span>$10k+</span></label>
+            </div>
+          </fieldset>
+
+          <label class="fld fld-wide">
+            <span class="fld-l"><span class="t-en">Anything else?</span><span class="t-fr">Autre chose ?</span></span>
+            <textarea name="message" rows="3"></textarea>
+          </label>
+
+          <div class="qform-foot">
+            <button class="btn magnetic" type="submit"><span class="t-en">Book Call →</span><span class="t-fr">Réserver l'appel →</span></button>
+            <p class="qform-note"><span class="t-en">Projects typically start at $3,000.</span><span class="t-fr">Les projets démarrent généralement à 3 000 $.</span></p>
+          </div>
+          <p class="qform-status" id="qformStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="contact-aside reveal">
+          <a class="contact-email magnetic" href="mailto:barorede@gmail.com">barorede@gmail.com</a>
+          <div class="contact-details">
+            <div><span class="lbl"><span class="t-en">Phone</span><span class="t-fr">Téléphone</span></span><a href="tel:+212661698862">+212 6 61 69 88 62</a></div>
+            <div><span class="lbl">LinkedIn</span><a href="https://www.linkedin.com/in/othmane-baroud" target="_blank" rel="noopener">othmane-baroud ↗</a></div>
+            <div><span class="lbl"><span class="t-en">Based in</span><span class="t-fr">Basé à</span></span><span>Casablanca, Morocco</span></div>
+          </div>
+        </aside>
       </div>
+
       <div class="foot-bar">
         <span>Othmane Baroud — Casablanca</span>
         <span id="year"></span>
@@ -522,6 +438,7 @@
     </div>
   </section>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
