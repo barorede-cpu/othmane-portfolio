@@ -226,11 +226,18 @@
   .hero{
     position:relative;overflow:hidden;
     min-height:min(92svh,940px);
-    display:grid;align-content:center;
+    /* an explicit full-width column: without it the implicit track sizes to
+       its content, so .wrap never reaches its max-width and the grid centres
+       the copy instead of letting it line up with the nav */
+    display:grid;grid-template-columns:minmax(0,1fr);align-content:center;
     padding:clamp(96px,12vw,140px) 0 clamp(96px,12vw,150px);
   }
   .hero-ghost{position:absolute;top:-4vw;right:clamp(-6vw,-2vw,4vw);font-family:var(--font-display);font-weight:900;font-size:clamp(11rem,42vw,34rem);line-height:0.8;color:var(--pop);opacity:0.16;user-select:none;pointer-events:none;z-index:0;will-change:transform;}
-  .hero-inner{position:relative;z-index:2;}
+  /* width:100% because .wrap's `margin:0 auto` would otherwise stop this
+     grid item from stretching — auto margins disable stretch, so the item
+     shrinks to its content and the margins centre it instead of letting
+     max-width line it up with the nav */
+  .hero-inner{position:relative;z-index:2;width:100%;}
   .hero-h1{font-family:var(--font-display);font-weight:900;font-size:clamp(3rem,10.5vw,8.5rem);line-height:0.9;letter-spacing:-0.01em;margin:20px 0 28px;}
   .mask-reveal{display:block;overflow:hidden;}
   .mask-reveal .word{display:inline-block;overflow:hidden;vertical-align:top;}
