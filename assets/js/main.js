@@ -3,6 +3,71 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(pointer: fine)').matches;
 
+  /* ------------------------------------------------------------------
+     Sound — a tiny synth kit. Every cue is generated with WebAudio, so
+     there are no audio files to ship and nothing to preload. Off unless
+     the visitor turns it on; the context stays suspended until then, so
+     we never trip a browser autoplay block.
+     ------------------------------------------------------------------ */
+  var Sound = (function(){
+    var ctx = null, master = null, on = false, lastHover = 0;
+
+    function boot(){
+      if(ctx) return true;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return false;
+      try{
+        ctx = new AC();
+        master = ctx.createGain();
+        master.gain.value = 0.13;
+        master.connect(ctx.destination);
+      }catch(e){ ctx = null; return false; }
+      return true;
+    }
+    function live(){
+      if(!on || !ctx) return false;
+      if(ctx.state === 'suspended'){ ctx.resume(); }
+      return true;
+    }
+    function tone(from, to, dur, type, gain){
+      if(!live()) return;
+      var t = ctx.currentTime;
+      var osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(from, t);
+      if(to) osc.frequency.exponentialRampToValueAtTime(to, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      osc.connect(g); g.connect(master);
+      osc.start(t); osc.stop(t + dur + 0.02);
+    }
+    function noise(dur, freq, gain){
+      if(!live()) return;
+      var len = Math.max(1, Math.floor(ctx.sampleRate * dur));
+      var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      var d = buf.getChannelData(0);
+      for(var i = 0; i < len; i++){ d[i] = (Math.random() * 2 - 1) * (1 - i / len); }
+      var src = ctx.createBufferSource(); src.buffer = buf;
+      var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = 0.8;
+      var g = ctx.createGain(); g.gain.value = gain;
+      src.connect(bp); bp.connect(g); g.connect(master);
+      src.start();
+    }
+    return {
+      enable: function(v){ on = v; if(v) boot(); },
+      /* throttled: sweeping a cursor across a list should not machine-gun */
+      hover: function(){
+        var now = Date.now();
+        if(now - lastHover < 70) return;
+        lastHover = now;
+        tone(2050, 2500, 0.05, 'sine', 0.16);
+      },
+      click: function(){ tone(540, 190, 0.15, 'triangle', 0.34); },
+      swipe: function(){ noise(0.2, 1500, 0.3); }
+    };
+  })();
+
   /* lang toggle */
   var btn = document.getElementById('langToggle');
   function setLang(lang){
@@ -39,6 +104,8 @@
     } else {
       requestAnimationFrame(function raf(time){ lenis.raf(time); requestAnimationFrame(raf); });
     }
+    /* keep the page frozen behind the intro overlay; restarted on intro:done */
+    if(!document.documentElement.classList.contains('intro-done')) lenis.stop();
   }
 
   /* scroll reveal */
@@ -51,7 +118,7 @@
       });
     });
     document.querySelectorAll('.mask-reveal').forEach(function(el){
-      if(el.id === 'mr1' || el.id === 'mr2') return; /* handled by preloader */
+      if(el.id === 'mr1' || el.id === 'mr2') return; /* handled by the intro handoff */
       gsap.to(el.querySelectorAll('.word span'), {
         y:0, duration:0.9, ease:'power3.out', stagger:0.06,
         scrollTrigger:{ trigger: el, start:'top 88%', once:true }
@@ -95,27 +162,18 @@
   }
   ctx.putImageData(imgData,0,0);
 
-  /* preloader */
-  var pre = document.getElementById('preloader');
-  var fill = document.getElementById('preloadFill');
-  function finishPreload(){
-    document.getElementById('mr1').classList.add('is-visible');
-    setTimeout(function(){ document.getElementById('mr2').classList.add('is-visible'); }, 90);
-    pre.classList.add('is-done');
-    setTimeout(function(){ pre.style.display = 'none'; }, 700);
-  }
-  if(reduce){
-    pre.style.display = 'none';
-    document.getElementById('mr1').classList.add('is-visible');
-    document.getElementById('mr2').classList.add('is-visible');
-  } else {
-    var pct = 0;
-    var t = setInterval(function(){
-      pct += Math.random()*18 + 8;
-      if(pct >= 100){ pct = 100; clearInterval(t); setTimeout(finishPreload, 220); }
-      fill.style.width = pct + '%';
-    }, 140);
-  }
+  /* intro → hero handoff: the name in the hero only unmasks once the
+     black overlay has wiped away (see the controller in index.html) */
+  (function(){
+    function revealHero(){
+      var a = document.getElementById('mr1'), b = document.getElementById('mr2');
+      if(a) a.classList.add('is-visible');
+      if(b) setTimeout(function(){ b.classList.add('is-visible'); }, 90);
+      if(lenis) lenis.start();
+    }
+    if(document.documentElement.classList.contains('intro-done')) revealHero();
+    else document.addEventListener('intro:done', revealHero, {once:true});
+  })();
 
   /* custom cursor + magnetic buttons (fine pointers only) */
   if(fine && !reduce){
@@ -126,6 +184,10 @@
     window.addEventListener('mousemove', function(e){
       dot.style.transform = 'translate3d('+e.clientX+'px,'+e.clientY+'px,0)';
       tx = e.clientX; ty = e.clientY;
+      if(!body.classList.contains('cursor-live')){
+        rx = tx; ry = ty; /* avoid the ring easing in from the corner */
+        body.classList.add('cursor-live');
+      }
     });
     function loop(){
       rx += (tx-rx)*0.18; ry += (ty-ry)*0.18;
@@ -190,9 +252,10 @@
     factsObs.observe(factsSection);
   }
 
-  /* hero ghost parallax */
-  if(!reduce){
-    var ghost = document.getElementById('heroGhost');
+  /* hero ghost parallax — the ghost is gone now that the black hole is the
+     hero background, so this is a no-op unless the element comes back */
+  var ghost = document.getElementById('heroGhost');
+  if(!reduce && ghost){
     var ticking = false;
     window.addEventListener('scroll', function(){
       if(!ticking){
@@ -248,7 +311,7 @@
     window.addEventListener('resize', sizeFx);
 
     var particles = [];
-    var palette = ['#e6ff4d', '#101114', '#c7db3f'];
+    var palette = ['#c8a96a', '#f4f1e8', '#a98c4f'];
     function blastAt(x, y){
       for(var i=0;i<28;i++){
         var angle = (Math.PI*2) * (i/28) + Math.random()*0.4;
@@ -298,5 +361,187 @@
     pill.addEventListener('pointerup', cancelHold);
     pill.addEventListener('pointerleave', cancelHold);
     pill.addEventListener('click', function(e){ e.preventDefault(); });
+    pill.addEventListener('pointerdown', function(){ Sound.click(); });
+  })();
+
+  /* ---- sound toggle ------------------------------------------------ */
+  (function(){
+    var btn = document.getElementById('sndToggle');
+    if(!btn) return;
+    var on = false;
+    try{ on = localStorage.getItem('ob-sound') === '1'; }catch(e){}
+    function set(v){
+      on = v;
+      Sound.enable(v);
+      btn.classList.toggle('is-on', v);
+      btn.setAttribute('aria-pressed', String(v));
+      btn.setAttribute('aria-label', v ? 'Couper le son' : 'Activer le son');
+      try{ localStorage.setItem('ob-sound', v ? '1' : '0'); }catch(e){}
+    }
+    set(on);
+    btn.addEventListener('click', function(){ set(!on); if(on) Sound.click(); });
+  })();
+
+  /* ---- sound cues on interactive elements -------------------------- */
+  (function(){
+    if(fine){
+      document.querySelectorAll('a, button, .svc, .chip, .plat, .slim-item, .pf').forEach(function(el){
+        el.addEventListener('mouseenter', function(){ Sound.hover(); });
+      });
+    }
+    document.querySelectorAll('a, button').forEach(function(el){
+      el.addEventListener('click', function(){ Sound.click(); });
+    });
+  })();
+
+  /* ---- scroll progress hairline ------------------------------------ */
+  (function(){
+    var bar = document.getElementById('scroll-progress');
+    if(!bar) return;
+    var ticking = false;
+    function paint(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(window.scrollY / h, 1) : 0) + ')';
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(paint); ticking = true; }
+    }, {passive:true});
+    paint();
+  })();
+
+  /* ---- proof counters ---------------------------------------------- */
+  (function(){
+    var grid = document.querySelector('.proof-grid');
+    if(!grid || !('IntersectionObserver' in window)) return;
+    function run(el){
+      var target = parseFloat(el.getAttribute('data-count'));
+      if(isNaN(target)) return;
+      var prefix = el.getAttribute('data-prefix') || '';
+      var suffix = el.getAttribute('data-suffix') || '';
+      var decimals = (String(el.getAttribute('data-count')).split('.')[1] || '').length;
+      if(reduce){ el.textContent = prefix + target.toFixed(decimals) + suffix; return; }
+      var start = null, dur = 1100;
+      function step(ts){
+        if(!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + (eased * target).toFixed(decimals) + suffix;
+        if(p < 1) requestAnimationFrame(step);
+        else el.textContent = prefix + target.toFixed(decimals) + suffix;
+      }
+      requestAnimationFrame(step);
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        grid.querySelectorAll('.pf-val[data-count]').forEach(run);
+        obs.disconnect();
+      });
+    }, {threshold:0.3});
+    obs.observe(grid);
+  })();
+
+  /* ---- marquee reacts to scroll velocity --------------------------- */
+  (function(){
+    if(reduce || !lenis) return;
+    var segs = document.querySelectorAll('.marquee-seg');
+    if(!segs.length) return;
+    var target = 0, current = 0;
+    lenis.on('scroll', function(e){
+      target = Math.max(-16, Math.min(16, -(e.velocity || 0) * 0.28));
+    });
+    (function loop(){
+      current += (target - current) * 0.12;
+      target *= 0.9; /* decay back to rest when the scroll stops */
+      if(Math.abs(current) > 0.01){
+        for(var i = 0; i < segs.length; i++){ segs[i].style.transform = 'skewX(' + current.toFixed(2) + 'deg)'; }
+      }
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  /* ---- parallax on the gallery + portrait -------------------------- */
+  if(hasGsap && !reduce){
+    gsap.utils.toArray('.feature-gallery img').forEach(function(img, i){
+      gsap.fromTo(img, {yPercent: -6}, {
+        yPercent: 6, ease:'none',
+        scrollTrigger:{ trigger: img.parentNode, start:'top bottom', end:'bottom top', scrub: 0.6 }
+      });
+    });
+    var portrait = document.querySelector('.profile-photo img');
+    if(portrait){
+      gsap.fromTo(portrait, {scale:1.08}, {
+        scale:1, ease:'none',
+        scrollTrigger:{ trigger: portrait, start:'top bottom', end:'bottom top', scrub: 0.8 }
+      });
+    }
+  }
+
+  /* ---- proof screenshot lightbox ----------------------------------- */
+  (function(){
+    var box = document.getElementById('lightbox');
+    var img = document.getElementById('lbImg');
+    var close = document.getElementById('lbClose');
+    var buttons = document.querySelectorAll('.shot-btn');
+    if(!box || !img || !buttons.length) return;
+    var opener = null;
+
+    function open(btn){
+      var src = btn.getAttribute('data-full');
+      var thumb = btn.querySelector('img');
+      opener = btn;
+      img.src = src;
+      img.alt = thumb ? thumb.alt : '';
+      box.hidden = false;
+      /* next frame so the transition has a from-state to animate out of */
+      requestAnimationFrame(function(){ box.classList.add('is-open'); });
+      if(lenis) lenis.stop();
+      document.body.style.overflow = 'hidden';
+      close.focus();
+    }
+    function shut(){
+      box.classList.remove('is-open');
+      if(lenis) lenis.start();
+      document.body.style.overflow = '';
+      setTimeout(function(){ box.hidden = true; img.src = ''; }, 300);
+      if(opener){ opener.focus(); opener = null; }
+    }
+
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){ open(btn); });
+    });
+    close.addEventListener('click', shut);
+    box.addEventListener('click', function(e){ if(e.target === box) shut(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && !box.hidden) shut();
+    });
+  })();
+
+  /* ---- active nav link --------------------------------------------- */
+  (function(){
+    if(!('IntersectionObserver' in window)) return;
+    var links = {};
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(a){
+      links[a.getAttribute('href').slice(1)] = a;
+    });
+    /* Track the whole visible set rather than the last event, otherwise the
+       highlight sticks on whatever fired last once we scroll off every
+       observed section (the hero, for instance, has no nav entry). */
+    var order = Object.keys(links);
+    var visible = Object.create(null);
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+      });
+      order.forEach(function(k){ links[k].classList.remove('is-active'); });
+      for(var i = 0; i < order.length; i++){
+        if(visible[order[i]]){ links[order[i]].classList.add('is-active'); break; }
+      }
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    Object.keys(links).forEach(function(id){
+      var sec = document.getElementById(id);
+      if(sec) obs.observe(sec);
+    });
   })();
 })();

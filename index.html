@@ -3,34 +3,104 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Othmane Baroud — Founder, 212 Denim</title>
-<meta name="description" content="Othmane Baroud — Founder of 212 Denim. Growth, e-commerce &amp; digital strategy for direct-to-consumer brands." />
+<title>Othmane Baroud — Sites web, e-commerce COD &amp; présence digitale</title>
+<meta name="description" content="Othmane Baroud — Création de sites web tous secteurs, e-commerce en paiement à la livraison (COD) et gestion de présence digitale : SEO, moteurs de recherche et réseaux sociaux. Casablanca, Maroc." />
+<script>
+  (function(){
+    var d = document.documentElement;
+    d.classList.add('js');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    d.classList.add(reduce ? 'no-intro' : 'intro-running');
+  })();
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000000'/%3E%3Ctext x='32' y='45' font-family='Helvetica,Arial,sans-serif' font-size='32' font-weight='700' fill='%23c8a96a' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" />
+<meta name="theme-color" content="#000000" />
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-<script>document.documentElement.classList.add('js');</script>
+<div id="scroll-progress" aria-hidden="true"></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Capture agrandie" hidden>
+  <button class="lb-close" id="lbClose" type="button" aria-label="Fermer">&times;</button>
+  <img id="lbImg" src="" alt="" />
+</div>
 <canvas id="grain" aria-hidden="true"></canvas>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="cursor-ring" aria-hidden="true"><span id="cursor-label"></span></div>
 <div id="cursor-dot" aria-hidden="true"></div>
 
-<div id="preloader" aria-hidden="true">
-  <div class="preload-mark">OB / 212</div>
-  <div class="preload-bar"><span class="preload-bar-fill" id="preloadFill"></span></div>
+<div class="intro is-wait" id="intro" aria-hidden="true">
+  <div class="intro__glow"></div>
+  <div class="intro__frame"><i class="itk tl"></i><i class="itk tr"></i><i class="itk bl"></i><i class="itk br"></i></div>
+  <div class="intro__center">
+    <p class="intro__eyebrow">CASABLANCA &mdash; MAROC</p>
+    <p class="shutter shutter--auto intro__mark" aria-label="Othmane Baroud">
+      <span aria-hidden="true">
+        <span class="shutter__line"><span class="shutter__word"><span class="shutter__char" data-c="O" style="--i:0"><span class="shutter__base" data-c="O">O</span></span><span class="shutter__char" data-c="T" style="--i:1"><span class="shutter__base" data-c="T">T</span></span><span class="shutter__char" data-c="H" style="--i:2"><span class="shutter__base" data-c="H">H</span></span><span class="shutter__char" data-c="M" style="--i:3"><span class="shutter__base" data-c="M">M</span></span><span class="shutter__char" data-c="A" style="--i:4"><span class="shutter__base" data-c="A">A</span></span><span class="shutter__char" data-c="N" style="--i:5"><span class="shutter__base" data-c="N">N</span></span><span class="shutter__char" data-c="E" style="--i:6"><span class="shutter__base" data-c="E">E</span></span></span></span>
+        <span class="shutter__line"><span class="shutter__word"><span class="shutter__char" data-c="B" style="--i:7"><span class="shutter__base" data-c="B">B</span></span><span class="shutter__char" data-c="A" style="--i:8"><span class="shutter__base" data-c="A">A</span></span><span class="shutter__char" data-c="R" style="--i:9"><span class="shutter__base" data-c="R">R</span></span><span class="shutter__char" data-c="O" style="--i:10"><span class="shutter__base" data-c="O">O</span></span><span class="shutter__char" data-c="U" style="--i:11"><span class="shutter__base" data-c="U">U</span></span><span class="shutter__char" data-c="D" style="--i:12"><span class="shutter__base" data-c="D">D</span></span></span></span>
+      </span>
+    </p>
+    <span class="intro__rule"></span>
+    <p class="intro__role">
+      <span>Sites&nbsp;Web</span><i>&middot;</i><span>E&#8209;commerce&nbsp;COD</span><i>&middot;</i><span>SEO&nbsp;&amp;&nbsp;Social&nbsp;Media</span>
+    </p>
+  </div>
 </div>
+<script>
+  /* Intro controller — self-contained so the page can never stay locked
+     behind the overlay if main.js fails to load. */
+  (function(){
+    var root = document.documentElement;
+    var el = document.getElementById('intro');
+    var finished = false;
+
+    function done(){
+      if(finished) return;
+      finished = true;
+      root.classList.remove('intro-running');
+      root.classList.add('intro-done');
+      document.dispatchEvent(new CustomEvent('intro:done'));
+    }
+
+    if(!el || !root.classList.contains('intro-running')){ done(); return; }
+
+    /* Hold the keyframes until the display font is ready, otherwise the
+       shutter sweeps across glyphs that have not been painted yet. */
+    var started = false;
+    function start(){ if(started) return; started = true; el.classList.remove('is-wait'); }
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(start); }
+    setTimeout(start, 700);
+
+    el.addEventListener('animationend', function(e){
+      if(e.animationName === 'introOut' || e.animationName === 'introSkip') done();
+    });
+    setTimeout(done, 8000);
+
+    function skip(){
+      if(finished) return;
+      el.classList.remove('is-wait');
+      el.classList.add('is-skip');
+      done();
+    }
+    el.addEventListener('click', skip);
+    window.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') skip();
+    });
+  })();
+</script>
 
 <header class="nav">
   <div class="wrap nav-row">
-    <a href="#top" class="brand">OB<small>OTHMANE&nbsp;BAROUD<br>212&nbsp;DENIM</small></a>
+    <a href="#top" class="brand">OB<small>OTHMANE&nbsp;BAROUD<br>WEB&nbsp;·&nbsp;E-COMMERCE&nbsp;·&nbsp;SEO</small></a>
     <nav class="nav-links">
+      <a href="#offre"><span class="t-fr">Offre</span><span class="t-en">Services</span></a>
       <a href="#profil"><span class="t-fr">Profil</span><span class="t-en">Profile</span></a>
       <a href="#travaux"><span class="t-fr">Travaux</span><span class="t-en">Work</span></a>
-      <a href="#parcours"><span class="t-fr">Parcours</span><span class="t-en">Experience</span></a>
-      <a href="#competences"><span class="t-fr">Compétences</span><span class="t-en">Toolkit</span></a>
+      <a href="#preuves"><span class="t-fr">Preuves</span><span class="t-en">Proof</span></a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-right">
       <button class="status-pill" id="statusPill" type="button"><span class="status-dot"></span><span class="t-fr">Disponible en freelance</span><span class="t-en">Available for freelance</span></button>
+      <button class="snd-toggle" id="sndToggle" type="button" aria-pressed="false" aria-label="Activer le son"><span></span><span></span><span></span><span></span></button>
       <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
     </div>
   </div>
@@ -38,21 +108,20 @@
 
 <main id="top">
   <section class="hero">
-    <canvas id="hero3d" aria-hidden="true"></canvas>
-    <div class="hero-ghost" id="heroGhost" aria-hidden="true">212</div>
+    <canvas id="blackhole" aria-hidden="true"></canvas>
     <div class="wrap hero-inner">
-      <div class="eyebrow"><span class="t-fr">FONDATEUR — 212 DENIM</span><span class="t-en">FOUNDER — 212 DENIM</span></div>
+      <div class="eyebrow"><span class="t-fr">SITES WEB — E-COMMERCE COD — PRÉSENCE DIGITALE</span><span class="t-en">WEB — COD E-COMMERCE — DIGITAL PRESENCE</span></div>
       <h1 class="hero-h1">
         <span class="mask-reveal" id="mr1"><span class="word" style="--i:0"><span>OTHMANE</span></span></span>
         <span class="mask-reveal" id="mr2"><span class="word" style="--i:1"><span>BAROUD</span></span></span>
       </h1>
       <p class="hero-thesis">
-        <span class="t-fr">Je construis des marques direct-to-consumer — du sourcing produit jusqu'à la dernière ligne de code du checkout.</span>
-        <span class="t-en">I build direct-to-consumer brands — from product sourcing to the last line of checkout code.</span>
+        <span class="t-fr">Je conçois des sites web pour tous les secteurs, je monte des boutiques e-commerce en paiement à la livraison, et je pilote votre présence en ligne — SEO, moteurs de recherche et réseaux sociaux.</span>
+        <span class="t-en">I build websites for every sector, set up cash-on-delivery e-commerce stores, and run your online presence — SEO, search engines and social media.</span>
       </p>
       <p class="hero-meta">
-        <span class="t-fr">Casablanca, Maroc — Growth, e-commerce &amp; stratégie digitale.</span>
-        <span class="t-en">Casablanca, Morocco — Growth, e-commerce &amp; digital strategy.</span>
+        <span class="t-fr">Casablanca, Maroc — Fondateur de 212 Denim, la marque sur laquelle je teste tout ce que je livre.</span>
+        <span class="t-en">Casablanca, Morocco — Founder of 212 Denim, the brand where I road-test everything I ship.</span>
       </p>
       <div class="hero-cta">
         <a class="btn magnetic" href="mailto:barorede@gmail.com"><span class="t-fr">Écrire un email</span><span class="t-en">Send an email</span></a>
@@ -67,8 +136,8 @@
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <div class="marquee-seg"><span>GROWTH</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>BRAND STRATEGY</span><span class="dot">·</span><span>SUPPLY CHAIN</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
-      <div class="marquee-seg"><span>GROWTH</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>BRAND STRATEGY</span><span class="dot">·</span><span>SUPPLY CHAIN</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
+      <div class="marquee-seg"><span>SITES WEB</span><span class="dot">·</span><span>CASH ON DELIVERY</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>SEO</span><span class="dot">·</span><span>SOCIAL MEDIA</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
+      <div class="marquee-seg"><span>SITES WEB</span><span class="dot">·</span><span>CASH ON DELIVERY</span><span class="dot">·</span><span>E-COMMERCE</span><span class="dot">·</span><span>SEO</span><span class="dot">·</span><span>SOCIAL MEDIA</span><span class="dot">·</span><span>SHOPIFY</span><span class="dot">·</span><span>NEXT.JS</span><span class="dot">·</span></div>
     </div>
   </div>
 
@@ -76,9 +145,50 @@
     <div class="wrap">
       <div class="facts-grid">
         <div class="fact"><div class="fact-value">03+</div><div class="fact-label"><span class="t-fr">Ans d'expérience digitale</span><span class="t-en">Years of digital experience</span></div></div>
-        <div class="fact"><div class="fact-value">01</div><div class="fact-label"><span class="t-fr">Marque fondée</span><span class="t-en">Brand founded</span></div></div>
+        <div class="fact"><div class="fact-value">21M+</div><div class="fact-label"><span class="t-fr">Impressions publicitaires générées</span><span class="t-en">Ad impressions delivered</span></div></div>
         <div class="fact"><div class="fact-value">AR · FR · EN</div><div class="fact-label"><span class="t-fr">Langues de travail</span><span class="t-en">Working languages</span></div></div>
         <div class="fact"><div class="fact-value">CASABLANCA</div><div class="fact-label"><span class="t-fr">Basé au Maroc</span><span class="t-en">Based in Morocco</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="offre">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">01</span><span class="t-fr">OFFRE</span><span class="t-en">SERVICES</span></div>
+        <h2><span class="t-fr">Trois métiers, un seul interlocuteur.</span><span class="t-en">Three disciplines, one point of contact.</span></h2>
+      </div>
+      <div class="svc-list reveal">
+        <article class="svc">
+          <div class="svc-idx">01</div>
+          <h3 class="svc-title"><span class="t-fr">Sites web</span><span class="t-en">Websites</span></h3>
+          <div class="svc-body">
+            <p class="t-fr">Vitrine, catalogue, réservation, plateforme métier — tous secteurs. Design sur mesure, code propre, rapide sur mobile, pensé pour convertir et pas seulement pour être joli.</p>
+            <p class="t-en">Brochure, catalog, booking, internal tooling — every sector. Custom design, clean code, fast on mobile, built to convert rather than merely to look good.</p>
+            <div class="svc-tags"><span>Next.js</span><span>React</span><span>Design UI/UX</span><span>Responsive</span><span>Core Web Vitals</span></div>
+          </div>
+          <div class="svc-arrow" aria-hidden="true">↗</div>
+        </article>
+        <article class="svc">
+          <div class="svc-idx">02</div>
+          <h3 class="svc-title"><span class="t-fr">E-commerce COD</span><span class="t-en">COD e-commerce</span></h3>
+          <div class="svc-body">
+            <p class="t-fr">Boutique en paiement à la livraison pensée pour le marché marocain : tunnel de commande en une page, confirmation téléphonique, suivi livreur, gestion des retours et du stock. Je l'opère tous les jours sur ma propre marque.</p>
+            <p class="t-en">Cash-on-delivery storefronts built for the Moroccan market: one-page checkout, phone confirmation, courier tracking, returns and stock. I run this daily on my own brand.</p>
+            <div class="svc-tags"><span>Paiement à la livraison</span><span>Shopify</span><span>Tunnel de commande</span><span>Logistique</span><span>ERP sur mesure</span></div>
+          </div>
+          <div class="svc-arrow" aria-hidden="true">↗</div>
+        </article>
+        <article class="svc">
+          <div class="svc-idx">03</div>
+          <h3 class="svc-title"><span class="t-fr">SEO &amp; présence digitale</span><span class="t-en">SEO &amp; digital presence</span></h3>
+          <div class="svc-body">
+            <p class="t-fr">Être trouvé sur Google et exister sur les réseaux. Référencement bilingue arabe/français, contenu, publicité Meta, gestion des pages Instagram et Facebook, et un tableau de bord pour suivre ce que ça rapporte.</p>
+            <p class="t-en">Get found on Google and exist on social. Bilingual Arabic/French SEO, content, Meta advertising, Instagram and Facebook management, plus a dashboard to track what it returns.</p>
+            <div class="svc-tags"><span>SEO</span><span>Google Search Console</span><span>Meta Ads</span><span>Instagram</span><span>GA4</span></div>
+          </div>
+          <div class="svc-arrow" aria-hidden="true">↗</div>
+        </article>
       </div>
     </div>
   </section>
@@ -86,7 +196,7 @@
   <section id="profil">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">01</span><span class="t-fr">PROFIL</span><span class="t-en">PROFILE</span></div>
+        <div class="eyebrow"><span class="idx">02</span><span class="t-fr">PROFIL</span><span class="t-en">PROFILE</span></div>
         <h2><span class="t-fr">Le produit et le code.</span><span class="t-en">The product and the code.</span></h2>
       </div>
       <div class="profile-grid">
@@ -110,7 +220,7 @@
 
   <section id="travaux" class="feature">
     <div class="wrap feature-head reveal">
-      <div class="eyebrow"><span class="idx">02</span><span class="t-fr">TRAVAUX SÉLECTIONNÉS</span><span class="t-en">SELECTED WORK</span></div>
+      <div class="eyebrow"><span class="idx">03</span><span class="t-fr">TRAVAUX SÉLECTIONNÉS</span><span class="t-en">SELECTED WORK</span></div>
       <div class="feature-title-row">
         <h2 class="mask-reveal" id="mrFeat"><span class="word" style="--i:0"><span>212</span></span> <span class="word" style="--i:1"><span>DENIM</span></span></h2>
         <span class="feature-year">2025 — <span class="t-fr">Présent</span><span class="t-en">Present</span></span>
@@ -159,12 +269,175 @@
         </article>
       </div>
     </div>
+
+    <div class="wrap">
+      <div class="case-list">
+        <article class="case reveal">
+          <div class="case-text">
+            <div class="case-eyebrow"><span class="t-fr">CLIENT — 2026</span><span class="t-en">CLIENT — 2026</span></div>
+            <h3>Learn &amp; Share</h3>
+            <p class="t-fr">Site vitrine pour une société marocaine d'infrastructures IT et de sûreté. Direction artistique, animation d'entrée, contenu bilingue et intégration Next.js — livré de la maquette à la mise en ligne.</p>
+            <p class="t-en">Brochure site for a Moroccan IT infrastructure and security firm. Art direction, entry animation, bilingual content and Next.js build — delivered from mockup to production.</p>
+            <div class="case-facts">
+              <div><b>8</b><span class="t-fr">domaines d'expertise</span><span class="t-en">expertise areas</span></div>
+              <div><b>2</b><span class="t-fr">langues</span><span class="t-en">languages</span></div>
+              <div><b>100%</b><span class="t-fr">sur mesure</span><span class="t-en">custom built</span></div>
+            </div>
+            <a class="link-arrow magnetic" href="https://learn-and-share-ivory.vercel.app/" target="_blank" rel="noopener">learn-and-share.vercel.app ↗</a>
+          </div>
+          <button type="button" class="case-media shot-btn" data-full="assets/img/case-learnandshare.jpg" aria-label="Agrandir la capture du site Learn &amp; Share">
+            <img src="assets/img/case-learnandshare.jpg" width="1600" height="897" loading="lazy" decoding="async"
+                 alt="Page d'accueil du site Learn &amp; Share — « Concevoir, installer et maintenir vos infrastructures techniques »" />
+          </button>
+        </article>
+
+        <article class="case reveal">
+          <div class="case-text">
+            <div class="case-eyebrow"><span class="t-fr">PRODUIT INTERNE — 212 DENIM</span><span class="t-en">INTERNAL PRODUCT — 212 DENIM</span></div>
+            <h3><span class="t-fr">ERP &amp; tableau de bord</span><span class="t-en">ERP &amp; dashboard</span></h3>
+            <p class="t-fr">Un back-office complet que j'ai construit pour piloter la marque : commandes, stock, livraison, clients, fournisseurs, analytique et vue en direct des visiteurs sur une carte du Maroc. C'est l'outil qui fait tourner l'opération au quotidien.</p>
+            <p class="t-en">A full back office I built to run the brand: orders, stock, delivery, customers, suppliers, analytics and a live visitor map of Morocco. It is the tool the daily operation runs on.</p>
+            <div class="case-facts">
+              <div><b>405</b><span class="t-fr">commandes / 12 mois</span><span class="t-en">orders / 12 months</span></div>
+              <div><b>82%</b><span class="t-fr">taux de confirmation</span><span class="t-en">confirmation rate</span></div>
+              <div><b>67%</b><span class="t-fr">taux de livraison</span><span class="t-en">delivery rate</span></div>
+            </div>
+            <span class="link-arrow" aria-disabled="true"><span class="t-fr">Accès privé — démo sur demande</span><span class="t-en">Private access — demo on request</span></span>
+          </div>
+          <button type="button" class="case-media shot-btn" data-full="assets/img/case-erp.jpg" aria-label="Agrandir la capture du tableau de bord ERP">
+            <img src="assets/img/case-erp.jpg" width="1600" height="897" loading="lazy" decoding="async"
+                 alt="Tableau de bord ERP 212 Denim — commandes, stock, livraison, analytique et vue en direct" />
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="preuves" class="proof">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow"><span class="idx">04</span><span class="t-fr">PREUVES</span><span class="t-en">PROOF</span></div>
+        <h2><span class="t-fr">Des chiffres, pas des promesses.</span><span class="t-en">Numbers, not promises.</span></h2>
+      </div>
+
+      <div class="proof-grid reveal">
+        <div class="pf">
+          <div class="pf-val" data-count="21.1" data-suffix="M">21.1M</div>
+          <div class="pf-lbl"><span class="t-fr">Impressions publicitaires diffusées</span><span class="t-en">Ad impressions delivered</span></div>
+          <div class="pf-src">Meta Ads Manager</div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="3.4" data-suffix="M">3.4M</div>
+          <div class="pf-lbl"><span class="t-fr">Personnes touchées</span><span class="t-en">People reached</span></div>
+          <div class="pf-src">Meta Ads Manager</div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="20" data-prefix="$" data-suffix="K">$20K</div>
+          <div class="pf-lbl"><span class="t-fr">Budget publicitaire piloté</span><span class="t-en">Ad budget managed</span></div>
+          <div class="pf-src">95 <span class="t-fr">campagnes</span><span class="t-en">campaigns</span></div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="61" data-suffix="K">61K</div>
+          <div class="pf-lbl"><span class="t-fr">Abonnés Instagram + Facebook</span><span class="t-en">Instagram + Facebook followers</span></div>
+          <div class="pf-src">@212_denim</div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="7.2" data-suffix="%">7.2%</div>
+          <div class="pf-lbl"><span class="t-fr">CTR moyen sur Google</span><span class="t-en">Average CTR on Google</span></div>
+          <div class="pf-src">Search Console · 16 <span class="t-fr">mois</span><span class="t-en">months</span></div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="9.5">9.5</div>
+          <div class="pf-lbl"><span class="t-fr">Position moyenne sur Google</span><span class="t-en">Average Google position</span></div>
+          <div class="pf-src">212denim.com</div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="1" data-suffix="er">1er</div>
+          <div class="pf-lbl"><span class="t-fr">Sur « 212 denim » et « 212 jeans »</span><span class="t-en">On “212 denim” and “212 jeans”</span></div>
+          <div class="pf-src"><span class="t-fr">Requêtes de marque</span><span class="t-en">Brand queries</span></div>
+        </div>
+        <div class="pf">
+          <div class="pf-val" data-count="2">2</div>
+          <div class="pf-lbl"><span class="t-fr">Plateformes développées de zéro</span><span class="t-en">Platforms built from scratch</span></div>
+          <div class="pf-src"><span class="t-fr">Boutique + ERP</span><span class="t-en">Storefront + ERP</span></div>
+        </div>
+      </div>
+
+      <div class="plat-list reveal">
+        <div class="plat">
+          <span class="plat-name">Instagram</span>
+          <span class="plat-meta">@212_denim</span>
+          <span class="plat-val">36 000 <span class="t-fr">abonnés</span><span class="t-en">followers</span></span>
+          <a href="https://www.instagram.com/212_denim/" target="_blank" rel="noopener">↗</a>
+        </div>
+        <div class="plat">
+          <span class="plat-name">Facebook</span>
+          <span class="plat-meta">/212DENIM</span>
+          <span class="plat-val">25 000 <span class="t-fr">abonnés</span><span class="t-en">followers</span></span>
+          <a href="https://web.facebook.com/212DENIM/" target="_blank" rel="noopener">↗</a>
+        </div>
+        <div class="plat">
+          <span class="plat-name">212denim.com</span>
+          <span class="plat-meta"><span class="t-fr">Boutique Next.js — arabe / français</span><span class="t-en">Next.js storefront — Arabic / French</span></span>
+          <span class="plat-val">14 000 <span class="t-fr">impressions Google</span><span class="t-en">Google impressions</span></span>
+          <a href="https://212denim.com" target="_blank" rel="noopener">↗</a>
+        </div>
+        <div class="plat">
+          <span class="plat-name">Learn &amp; Share</span>
+          <span class="plat-meta"><span class="t-fr">Site client — infrastructures IT</span><span class="t-en">Client site — IT infrastructure</span></span>
+          <span class="plat-val"><span class="t-fr">Livré 2026</span><span class="t-en">Shipped 2026</span></span>
+          <a href="https://learn-and-share-ivory.vercel.app/" target="_blank" rel="noopener">↗</a>
+        </div>
+      </div>
+
+      <div class="shots reveal">
+        <div class="shots-head">
+          <span class="t-fr">Captures des tableaux de bord — cliquez pour agrandir</span>
+          <span class="t-en">Dashboard captures — click to enlarge</span>
+        </div>
+        <div class="shots-grid">
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-meta-ads.jpg" aria-label="Agrandir la capture Meta Ads Manager">
+              <img src="assets/img/proof-meta-ads.jpg" width="1600" height="897" loading="lazy" decoding="async"
+                   alt="Meta Ads Manager — 95 campagnes, 21 116 161 impressions, 3 375 805 de couverture, 20 743 $ dépensés" />
+            </button>
+            <figcaption>
+              <b>Meta Ads Manager</b>
+              <span class="t-fr">95 campagnes · 21 116 161 impressions · 3 375 805 personnes touchées · CPM 0,98 $</span>
+              <span class="t-en">95 campaigns · 21,116,161 impressions · 3,375,805 reached · $0.98 CPM</span>
+            </figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-search-console.jpg" aria-label="Agrandir la capture Google Search Console">
+              <img src="assets/img/proof-search-console.jpg" width="1600" height="897" loading="lazy" decoding="async"
+                   alt="Google Search Console — 212denim.com, 1,01 k clics, 14 k impressions, CTR 7,2 %, position moyenne 9,5" />
+            </button>
+            <figcaption>
+              <b>Google Search Console</b>
+              <span class="t-fr">16 mois · 1 010 clics · 14 000 impressions · CTR 7,2 % · position 9,5</span>
+              <span class="t-en">16 months · 1,010 clicks · 14,000 impressions · 7.2% CTR · position 9.5</span>
+            </figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="shot-btn" data-full="assets/img/proof-meta-insights.jpg" aria-label="Agrandir la capture Meta Business Suite">
+              <img src="assets/img/proof-meta-insights.jpg" width="1600" height="897" loading="lazy" decoding="async"
+                   alt="Meta Business Suite — 11,4 M de vues de contenu, 2 898 064 spectateurs, 65,6 K interactions" />
+            </button>
+            <figcaption>
+              <b>Meta Business Suite</b>
+              <span class="t-fr">2026 · 11,4 M de vues · 2 898 064 spectateurs · 65,6 K interactions</span>
+              <span class="t-en">2026 · 11.4M views · 2,898,064 viewers · 65.6K interactions</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="parcours">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">03</span><span class="t-fr">PARCOURS</span><span class="t-en">EXPERIENCE</span></div>
+        <div class="eyebrow"><span class="idx">05</span><span class="t-fr">PARCOURS</span><span class="t-en">EXPERIENCE</span></div>
         <h2><span class="t-fr">Chronologie.</span><span class="t-en">Timeline.</span></h2>
       </div>
       <ul class="slim-list reveal">
@@ -187,7 +460,7 @@
   <section id="competences">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow"><span class="idx">04</span><span class="t-fr">COMPÉTENCES</span><span class="t-en">TOOLKIT</span></div>
+        <div class="eyebrow"><span class="idx">06</span><span class="t-fr">COMPÉTENCES</span><span class="t-en">TOOLKIT</span></div>
         <h2><span class="t-fr">La boîte à outils.</span><span class="t-en">The toolkit.</span></h2>
       </div>
       <div class="toolkit-grid">
@@ -234,7 +507,7 @@
 
   <section id="contact" class="contact">
     <div class="wrap contact-inner">
-      <div class="eyebrow"><span class="idx">05</span>CONTACT</div>
+      <div class="eyebrow"><span class="idx">07</span>CONTACT</div>
       <h2 class="reveal"><span class="t-fr">On construit quelque chose ?</span><span class="t-en">Let's build something.</span></h2>
       <a class="contact-email reveal magnetic" href="mailto:barorede@gmail.com">barorede@gmail.com</a>
       <div class="contact-details reveal">
@@ -253,14 +526,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script src="assets/js/main.js"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module" src="assets/js/hero-3d.js"></script>
+<script type="module" src="assets/js/blackhole.js"></script>
 </body>
 </html>
