@@ -239,7 +239,7 @@ section{padding:clamp(80px,10vw,140px) 0;}
 .psr-block p{color:var(--muted);font-size:0.96rem;}
 
 /* numbers */
-.kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(10px,1.2vw,16px);margin:clamp(26px,4vw,40px) 0;}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.2vw,16px);margin:clamp(26px,4vw,40px) 0;}
 .kpi-3{grid-template-columns:repeat(3,1fr);}
 .kpi b{font-family:var(--font-display);font-weight:900;font-size:clamp(1.6rem,2.8vw,2.3rem);color:var(--accent);line-height:1;font-variant-numeric:tabular-nums;}
 .kpi .gcard-in > span:not(.gcard-ray){font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);}
@@ -248,6 +248,8 @@ section{padding:clamp(80px,10vw,140px) 0;}
 .cs-shots{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,22px);margin-bottom:28px;}
 /* four dashboards read better two-up than squeezed into thirds */
 .cs-shots-2{grid-template-columns:repeat(2,1fr);}
+/* the courier dashboard is the strongest proof on the page — full width */
+.cs-shots-2 .shot:last-child{grid-column:1/-1;}
 .cs-shots-1{grid-template-columns:minmax(0,760px);}
 .shot{margin:0;}
 .shot-btn{
@@ -359,6 +361,8 @@ section{padding:clamp(80px,10vw,140px) 0;}
 .qform-status{grid-column:1/-1;font-family:var(--font-mono);font-size:0.8rem;min-height:1.2em;}
 .qform-status.ok{color:var(--accent);}
 .qform-status.err{color:#e0704f;}
+.qform-open{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px;}
+.qform-open:hover{border-bottom-color:var(--accent);}
 .fld.invalid input,.fld.invalid textarea{border-bottom-color:#e0704f;}
 
 .contact-aside{display:grid;gap:28px;align-content:start;}
@@ -395,7 +399,7 @@ section{padding:clamp(80px,10vw,140px) 0;}
 
 /* ---------------------------- responsive --------------------------- */
 @media (max-width:1000px){
-  .kpi{grid-template-columns:repeat(3,1fr);}
+  .kpi{grid-template-columns:repeat(2,1fr);}
   .build-grid,.who-grid{grid-template-columns:repeat(2,1fr);}
   .cs-shots,.cs-shots-1{grid-template-columns:1fr;}
   .contact-grid{grid-template-columns:1fr;}

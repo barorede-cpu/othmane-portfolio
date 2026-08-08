@@ -337,20 +337,22 @@
         sending: 'Sending…',
         sent: 'Thanks — I\'ll get back to you within 24 hours.',
         failed: 'Something went wrong. Email me directly at ' + CONTACT_EMAIL + '.',
-        mail: 'Opening your email app with the answers filled in.'
+        ready: 'Your message is ready.',
+        open: 'Open it in your email app →'
       },
       fr: {
         missing: 'Merci d\'indiquer votre nom et un email valide.',
         sending: 'Envoi…',
         sent: 'Merci — je vous réponds sous 24 heures.',
         failed: 'Un problème est survenu. Écrivez-moi directement à ' + CONTACT_EMAIL + '.',
-        mail: 'Ouverture de votre messagerie avec les réponses pré-remplies.'
+        ready: 'Votre message est prêt.',
+        open: 'L\'ouvrir dans votre messagerie →'
       }
     };
     var t = function(key){ return (COPY[lang] || COPY.en)[key]; };
 
     function say(msg, kind){
-      status.textContent = msg;
+      status.textContent = msg;   /* also clears the link from a previous try */
       status.className = 'qform-status' + (kind ? ' ' + kind : '');
     }
 
@@ -398,13 +400,20 @@
       var v = collect();
       if(!markInvalid(v)){ say(t('missing'), 'err'); return; }
 
-      /* No key configured yet — hand the same answers to the mail client
-         rather than pretending the message was sent. */
+      /* No key configured yet. Offer the same answers as a pre-filled email,
+         but never navigate there on the visitor's behalf: a button labelled
+         "Book Call" that silently launches a mail client is a nasty surprise.
+         They click the link if they want it. */
       if(!FORM_ACCESS_KEY){
-        say(t('mail'), 'ok');
-        window.location.href = 'mailto:' + CONTACT_EMAIL +
+        say(t('ready'), 'ok');
+        var link = document.createElement('a');
+        link.className = 'qform-open';
+        link.textContent = t('open');
+        link.href = 'mailto:' + CONTACT_EMAIL +
           '?subject=' + encodeURIComponent('Project enquiry — ' + (v.company || v.name)) +
           '&body=' + encodeURIComponent(asText(v));
+        status.appendChild(document.createTextNode(' '));
+        status.appendChild(link);
         return;
       }
 
