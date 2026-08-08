@@ -103,16 +103,34 @@
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
   }
 
-  /* ---- hero headline ------------------------------------------------
-     There is no intro overlay any more, so this fires as soon as the
-     stylesheet has applied rather than waiting on an animation. */
-  requestAnimationFrame(function(){
+  /* ---- hero name ------------------------------------------------------
+     Letters blur in one after another. Two frames so the from-state is
+     painted first, otherwise the transition has nothing to run from. */
+  (function(){
+    var name = document.getElementById('heroName');
+    var hero = document.querySelector('.hero');
+    if(!name || !hero) return;
+
+    var released = false;
+    function releaseRest(){
+      if(released) return;
+      released = true;
+      hero.classList.add('is-ready');
+    }
+
+    if(reduce){ name.classList.add('is-in'); releaseRest(); return; }
+
     requestAnimationFrame(function(){
-      var a = document.getElementById('mr1'), b = document.getElementById('mr2');
-      if(a) a.classList.add('is-visible');
-      if(b) b.classList.add('is-visible');
+      requestAnimationFrame(function(){ name.classList.add('is-in'); });
     });
-  });
+
+    /* Hand over on the real end of the last letter rather than a guessed
+       duration, with a timeout in case the transition never fires. */
+    var chars = name.querySelectorAll('.hn-char');
+    var last = chars[chars.length - 1];
+    if(last) last.addEventListener('transitionend', releaseRest, {once:true});
+    setTimeout(releaseRest, 2400);
+  })();
 
   /* ---- grain --------------------------------------------------------- */
   (function(){
@@ -178,11 +196,25 @@
     });
   })();
 
-  /* ---- parallax on the case screenshots + portrait -------------------- */
+  /* ---- proof screenshots: 3D scroll entrance --------------------------
+     The cards start tipped back in perspective and offset sideways in
+     alternating directions, then rotate flat and slide into place as the
+     grid comes up the viewport. Scrubbed, so the scroll drives it. */
   if(hasGsap && !reduce){
+    gsap.utils.toArray('.cs-shots').forEach(function(grid){
+      gsap.utils.toArray('.shot', grid).forEach(function(shot, i){
+        var dir = (i % 2 === 0) ? -1 : 1;
+        gsap.fromTo(shot,
+          { rotateX: 18, rotateZ: dir * 5, y: 110, x: dir * 90, opacity: 0.15 },
+          { rotateX: 0, rotateZ: 0, y: 0, x: 0, opacity: 1, ease: 'none',
+            scrollTrigger:{ trigger: grid, start: 'top bottom', end: 'top 32%', scrub: 0.8 } }
+        );
+      });
+    });
+    /* a little drift inside each frame, so the images are not static plates */
     gsap.utils.toArray('.shot-btn img').forEach(function(img){
-      gsap.fromTo(img, {yPercent:-4}, {
-        yPercent:4, ease:'none',
+      gsap.fromTo(img, {yPercent:-3}, {
+        yPercent:3, ease:'none',
         scrollTrigger:{ trigger: img.parentNode, start:'top bottom', end:'bottom top', scrub:0.6 }
       });
     });

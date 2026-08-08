@@ -762,25 +762,27 @@ if (el) {
     hotColor: '#FFF3DE',
     midColor: '#C8A96A',
     coolColor: '#6B4A18',
-    /* the hero copy sits on the left, so the hole goes right and the veil left */
-    focus: [0.74, 0.48],
-    scrim: 'left',
-    scrimStrength: 0.92,
-    elevation: -5.5,
-    fov: 42,
+    /* the copy is centred over it now, so the hole sits low and centred and
+       the CSS radial scrim keeps the middle of the frame readable */
+    focus: [0.5, 0.72],
+    scrim: 'none',
+    elevation: -6,
+    fov: 52,
     steps: 300,
     resolution: 0.7,
-    vignette: 0.34,
+    vignette: 0.4,
+    exposure: 0.8,
     narrow: {
       /* copy on top, hole low and whole in the bottom third, veil from above */
       /* whole, not half — a clipped hole reads as a mistake, so the field
          widens to shrink it into the space the copy leaves */
-      focus: [0.5, 0.775],
+      focus: [0.5, 0.86],
       scrim: 'top',
       scrimStrength: 0.95,
       elevation: -7,
-      fov: 68,
-      glow: 0.85,
+      fov: 72,
+      glow: 0.6,
+      exposure: 0.62,
       steps: 190,
       resolution: 0.58,
     },
