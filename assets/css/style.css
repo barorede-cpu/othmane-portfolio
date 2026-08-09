@@ -587,3 +587,19 @@ section{padding:clamp(80px,10vw,140px) 0;}
   @media (max-width:767px){
     .hero-name{font-size:25.4vw;letter-spacing:-0.035em;}
   }
+
+  /* a conversion point at the end of each case study, lighter than the band */
+  .cs-cta{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+    gap:clamp(14px,2vw,28px);text-align:center;
+    margin-top:clamp(32px,4vw,48px);padding-top:clamp(24px,3vw,34px);
+    border-top:1px solid var(--line);
+  }
+  .cs-cta p{
+    font-family:var(--font-display);font-weight:800;
+    font-size:clamp(1.15rem,2.2vw,1.6rem);color:var(--ink);
+  }
+  @media (max-width:560px){
+    .cs-cta{flex-direction:column;gap:16px;}
+    .cs-cta .btn{width:100%;justify-content:center;}
+  }
